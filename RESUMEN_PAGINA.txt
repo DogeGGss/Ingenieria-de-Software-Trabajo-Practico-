@@ -1,0 +1,39 @@
+RESUMEN ACTUAL - PORTAL DE TALLERES (POC VISUAL)
+
+1) Estructura general
+- Pagina estatica (HTML/CSS/JS) sin backend.
+- Navegacion por secciones: Inicio, Mapa conceptual y Acciones.
+- Cambio de sesion hardcodeado: Visitante, Admin, Carlos y Lucia.
+
+2) Seccion Inicio
+- Presentacion general del prototipo.
+- Tarjetas con perfiles del sistema:
+  - Ana Moderadora (Admin)
+  - Carlos Taller (Colaborador)
+  - Lucia Centro Cultural (Colaborador)
+
+3) Seccion Mapa conceptual
+- Placeholder visual para una futura vista conceptual.
+- Muestra bloques de Usuario, Taller y Exportacion.
+- Todavia no tiene logica funcional ni filtros activos.
+
+4) Seccion Acciones (segun rol)
+- Admin:
+  - Ve solicitudes pendientes.
+  - Puede aceptar o rechazar solicitudes.
+- Colaborador (Carlos/Lucia):
+  - Completa formulario de datos personales y del taller.
+  - Envia solicitud para aprobacion.
+- Visitante:
+  - No ve paneles de acciones de rol.
+
+5) Estado funcional actual
+- Flujo visual de alta y aprobacion implementado en memoria (hardcode).
+- Sin persistencia de datos.
+- Sin integracion real a mapas.
+- Sin integracion real de correos.
+- Sin integracion a PrintAllTheThings.
+
+6) Pie de pagina
+- Incluye datos del Grupo 4 y materia.
+

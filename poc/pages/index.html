@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal de Talleres - Prototipo</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <img src="../../160x160 logo ungs.jpg" alt="Logo del portal" class="logo-img" />
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">Portal de Talleres</div>
+            <div class="brand-subtitle">Prototipo visual de la aplicacion</div>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <nav class="nav" aria-label="Navegacion">
+            <button class="nav-link is-active" data-target="seccion-inicio" type="button">
+              Inicio
+            </button>
+            <button class="nav-link" data-target="seccion-mapa" type="button">
+              Mapa conceptual
+            </button>
+            <button class="nav-link" data-target="seccion-acciones" type="button">
+              Acciones
+            </button>
+          </nav>
+
+          <div class="session">
+            <button class="session-toggle" id="sessionToggle" type="button">
+              <span id="sessionLabel">Iniciar sesion</span>
+            </button>
+            <div class="session-menu" id="sessionMenu">
+              <button class="session-option" data-user="admin" type="button">
+                Ana Moderadora (Admin)
+              </button>
+              <button class="session-option" data-user="carlos" type="button">
+                Carlos Taller (Colaborador)
+              </button>
+              <button class="session-option" data-user="lucia" type="button">
+                Lucia Centro Cultural (Colaborador)
+              </button>
+              <button class="session-option" data-user="anon" type="button">
+                Cerrar sesion / Visitante
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="layout">
+        <main class="content">
+          <section class="content-section is-active" id="seccion-inicio">
+            <div class="hero">
+              <div class="hero-copy">
+                <h1 class="hero-title">Bienvenido al Portal de Talleres</h1>
+                <p class="hero-text">
+                  Vista preliminar de la aplicacion: estructura de pantallas, componentes
+                  visuales y flujo de usuario. La integracion funcional se desarrolla en la
+                  siguiente etapa.
+                </p>
+                <div class="hero-badges">
+                  <span class="badge">Hardcode</span>
+                  <span class="badge">Solo UI</span>
+                  <span class="badge">100% estatica</span>
+                </div>
+              </div>
+              <div class="hero-preview" aria-hidden="true">
+                <div class="preview-card">
+                  <div class="preview-title">
+                    Estado del sistema
+                    <span class="session-badge" id="sessionBadge">Visitante</span>
+                  </div>
+                  <div class="preview-status ok" id="sessionStatus">OK</div>
+                  <div class="preview-meta">
+                    <div>Ultima simulacion: <strong id="lastRun">—</strong></div>
+                    <div>Categoria: <strong id="currentCategory">Tareas</strong></div>
+                  </div>
+                </div>
+                <div class="preview-grid">
+                  <div class="mini-stat">
+                    <div class="mini-label">Tareas</div>
+                    <div class="mini-value" id="statTasks">8</div>
+                  </div>
+                  <div class="mini-stat">
+                    <div class="mini-label">Reportes</div>
+                    <div class="mini-value" id="statReports">3</div>
+                  </div>
+                  <div class="mini-stat">
+                    <div class="mini-label">Usuarios</div>
+                    <div class="mini-value" id="statUsers">12</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <div class="card">
+                <div class="card-title">Perfiles del sistema</div>
+                <div class="card-text">
+                  Se utilizan 3 perfiles hardcodeados para la demo: 1 administrador del
+                  portal y 2 colaboradores/talleristas que usan el sistema.
+                </div>
+              </div>
+              <div class="card profile-card">
+                <div class="profile-role">Administrador</div>
+                <div class="profile-name">Ana Moderadora</div>
+                <div class="profile-meta">
+                  Encargada de aprobar/rechazar talleres, seguir contenidos y gestionar la
+                  exportacion mensual a PrintAllTheThings.
+                </div>
+              </div>
+              <div class="card profile-card">
+                <div class="profile-role">Colaborador</div>
+                <div class="profile-name">Carlos Taller</div>
+                <div class="profile-meta">
+                  Ofrece un taller de musica en su propio espacio. Se registra en el
+                  portal, completa los datos del taller y espera la aprobacion.
+                </div>
+              </div>
+              <div class="card profile-card">
+                <div class="profile-role">Colaborador</div>
+                <div class="profile-name">Lucia Centro Cultural</div>
+                <div class="profile-meta">
+                  Coordina actividades dentro del centro cultural. Sus talleres usan la
+                  misma ubicacion que la sede principal en el mapa.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="content-section" id="seccion-mapa">
+            <div class="section-header">
+              <h2>Mapa conceptual</h2>
+              <div class="section-sub">Vista preliminar de clases y filtros</div>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Placeholder visual</div>
+              <div class="callout-text">
+                En esta seccion luego se va a mostrar el mapa conceptual del sistema
+                (clases principales, relaciones y filtros de busqueda).
+              </div>
+            </div>
+            <div class="section-grid">
+              <div class="card">
+                <div class="card-title">Clase: Usuario</div>
+                <div class="card-text">Tipos previstos: Visitante, Colaborador, Moderador.</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Clase: Taller</div>
+                <div class="card-text">Datos, estado de aprobacion, ubicacion y horarios.</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Clase: Exportacion</div>
+                <div class="card-text">Envio mensual, estado, errores y reintentos.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="content-section" id="seccion-acciones">
+            <div class="section-header">
+              <h2>Acciones y flujo</h2>
+              <div class="section-sub">Interacciones segun nivel de acceso</div>
+            </div>
+
+            <div class="actions-grid">
+              <div class="card card-wide">
+                <div class="card-title">Operaciones del sistema</div>
+                <div class="card-text">
+                  Usá el panel de la izquierda para visualizar variaciones de estado en la
+                  interfaz. Esta capa es exclusivamente de presentacion.
+                </div>
+                <div class="divider"></div>
+                <div class="inline-stats">
+                  <div class="inline-stat">
+                    <div class="inline-label">Ultimo run</div>
+                    <div class="inline-value" id="inlineLastRun">—</div>
+                  </div>
+                  <div class="inline-stat">
+                    <div class="inline-label">Categoria</div>
+                    <div class="inline-value" id="inlineCategory">Tareas</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card role-panel" id="adminPanel">
+                <div class="card-title">Acciones de administrador</div>
+                <div class="card-text">
+                  Revisar solicitudes pendientes de colaboradores y decidir aprobacion o
+                  rechazo segun la informacion enviada.
+                </div>
+                <div class="table-like" id="adminRequestsList"></div>
+              </div>
+
+              <div class="card role-panel" id="collabPanel">
+                <div class="card-title">Acciones de colaborador</div>
+                <div class="card-text">
+                  Enviar datos del colaborador y del taller para su revision por parte del
+                  administrador.
+                </div>
+                <div class="panel-group">
+                  <label class="field">
+                    <span class="field-label">Nombre y apellido</span>
+                    <input class="field-control" id="fNombre" value="Carlos Taller" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Telefono</span>
+                    <input class="field-control" id="fTelefono" value="11-4444-5555" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Correo</span>
+                    <input class="field-control" id="fCorreo" value="carlos@correo.com" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Nombre del taller</span>
+                    <input class="field-control" id="fTaller" value="Taller Melodia Urbana" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Descripcion general</span>
+                    <textarea class="field-control" id="fDescripcion" rows="2">Clases iniciales e intermedias para adolescentes y adultos.</textarea>
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Actividades ofrecidas</span>
+                    <input class="field-control" id="fActividades" value="Guitarra, canto y ensamble" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Rubro</span>
+                    <input class="field-control" id="fRubro" value="Musica" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Contacto / redes</span>
+                    <input class="field-control" id="fRedes" value="@melodiaurbana" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Ubicacion</span>
+                    <select class="field-control" id="fUbicacion">
+                      <option value="propia" selected>Taller propio</option>
+                      <option value="centro">Misma sede del centro cultural</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Direccion</span>
+                    <input class="field-control" id="fDireccion" value="Av. Central 123" />
+                  </label>
+                  <label class="field">
+                    <span class="field-label">Horarios</span>
+                    <input class="field-control" id="fHorarios" value="Lun a Vie 18:00 a 21:00" />
+                  </label>
+                </div>
+                <div class="panel-actions" style="margin-top:12px">
+                  <button class="btn btn-primary" type="button" id="btnEnviarSolicitud">
+                    Enviar para aprobacion
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+              Mensaje de demo.
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer class="footer">
+        <div class="footer-left">
+          Grupo 4 - Fonseca, Ulises - Alan Emilio Riggio - Arias, Diego Alexis - Perea, Brian
+        </div>
+        <div class="footer-right">
+          Ingenieria de Software - Trabajo Practico
+        </div>
+      </footer>
+    </div>
+
+    <script src="../js/main.js"></script>
+  </body>
+</html>
+
