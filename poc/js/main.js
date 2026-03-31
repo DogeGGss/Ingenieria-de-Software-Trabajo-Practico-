@@ -43,6 +43,7 @@
   const sessionLabel = document.getElementById("sessionLabel");
   const sessionBadge = document.getElementById("sessionBadge");
   const sessionStatus = document.getElementById("sessionStatus");
+  const themeToggle = document.getElementById("themeToggle");
 
   let currentUser = "anon";
 
@@ -100,6 +101,12 @@
 
   let requestSeq = 1;
   const pendingRequests = [];
+
+  function applyTheme(mode) {
+    const light = mode === "light";
+    document.body.classList.toggle("light-mode", light);
+    if (themeToggle) themeToggle.checked = light;
+  }
 
   function getValue(id) {
     const el = document.getElementById(id);
@@ -291,6 +298,18 @@
         sessionMenu.classList.remove("is-open");
       }
     });
+  }
+
+  if (themeToggle) {
+    const savedTheme = window.localStorage.getItem("portal_theme") || "dark";
+    applyTheme(savedTheme);
+    themeToggle.addEventListener("change", () => {
+      const nextTheme = themeToggle.checked ? "light" : "dark";
+      window.localStorage.setItem("portal_theme", nextTheme);
+      applyTheme(nextTheme);
+    });
+  } else {
+    applyTheme("dark");
   }
 
   applyUser();
