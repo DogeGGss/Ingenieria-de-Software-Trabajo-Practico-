@@ -12,29 +12,174 @@
     }
   }
 
-  const TALLERES_MAPA = [
-    {
-      nombre: "Sede Centro Cultural",
-      rubro: "Danza",
-      lat: -34.5224,
-      lng: -58.7167,
-      imagen: "Centro de danza.jpg",
-    },
-    {
-      nombre: "Taller Melodia Urbana",
-      rubro: "Musica",
-      lat: -34.531,
-      lng: -58.705,
-      imagen: "taller guitarra.jpeg",
-    },
-    {
-      nombre: "Taller de Ceramica Comunitario",
-      rubro: "Arte",
-      lat: -34.518,
-      lng: -58.721,
-      imagen: "Taller ceramica.jpeg",
-    },
-  ];
+  const WS = window.WORKSHOP_CATALOG || [];
+
+  function thumbFileForRubro(rubro) {
+    if (rubro === "Musica") return "taller guitarra.jpeg";
+    if (rubro === "Danza") return "Centro de danza.jpg";
+    return "Taller ceramica.jpeg";
+  }
+
+  const ZONA_CENTRO = {
+    Malvinas: { lat: -34.535, lng: -58.708 },
+    "Los Polvorines": { lat: -34.528, lng: -58.704 },
+    "Grand Bourg": { lat: -34.486, lng: -58.725 },
+    "Pablo Podesta": { lat: -34.5798, lng: -58.6097 },
+    "Jose C. Paz": { lat: -34.516, lng: -58.768 },
+    "San Miguel": { lat: -34.543, lng: -58.712 },
+    "Del Viso": { lat: -34.451, lng: -58.802 },
+    Tortuguitas: { lat: -34.494, lng: -58.763 },
+  };
+  const ZONA_DEFAULT = { lat: -34.52, lng: -58.72 };
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  const porZona = {};
+  /** ~metros visibles por paso del espiral (lat ~111m por 0.001°); separa talleres dentro de la misma zona. */
+  const radioPorZona = 0.00205;
+  const estirarLng = 1.38;
+  WS.forEach((w) => {
+    w.imagen = thumbFileForRubro(w.rubro);
+    const base = ZONA_CENTRO[w.zona] || ZONA_DEFAULT;
+    const k = porZona[w.zona] = (porZona[w.zona] || 0) + 1;
+    const j = k - 1;
+    const r = radioPorZona * Math.sqrt(j + 1);
+    const t = j * goldenAngle;
+    w.lat = base.lat + r * Math.cos(t);
+    w.lng = base.lng + r * Math.sin(t) * estirarLng;
+  });
+
+  let workshopSearchQuery = "";
+
+  const RUBRO_BUSQUEDA = {
+    Musica:
+      "musica musical instrumentos canto guitarra electrica acustica violin ukelele ukulele bateria percusion ensamble banda sonido",
+    Danza: "danza baile movimiento coreografia salsa bachata tango zumba folclore",
+    Arte: "arte pintura dibujo ceramica oleo plastico color creatividad",
+    Fotografia: "fotografia foto camara imagen retrato calle digital",
+    Teatro: "teatro actuacion escena dramaturgia obra voz",
+    Tecnologia: "tecnologia informatica computadora internet web programacion digital",
+    Bienestar: "bienestar yoga relajacion risoterapia mindfulness salud emocional",
+    Gastronomia: "gastronomia comida cocina panaderia horno restaurante recetas alimentos desayuno",
+    Inclusion: "inclusion lsa senas sordos accesibilidad comunicacion",
+    Literatura: "literatura lectura cuento poesia libro escritura",
+    Ecologia: "ecologia jardin huerta plantas compost medio ambiente",
+    Manualidades: "manualidades bordado origami papel textil hilo",
+    Educacion: "educacion escuela apoyo estudio matematica secundaria",
+    Diseno: "diseno serigrafia estampado grafico remera",
+    Juegos: "juegos ajedrez estrategia torneo",
+    Ciencia: "ciencia quimica experimento laboratorio",
+    Deporte: "deporte karate artes marciales gimnasio",
+    Salud: "salud nutricion cocina saludable primeros auxilios rcp emergencia medicina comunitaria",
+    Historia: "historia memoria archivo barrio patrimonio",
+    Artesania: "artesania cuero marroquineria craft",
+    Textil: "textil costura confeccion modista ropa",
+    Oficios: "oficios electricidad casa taller trabajo",
+  };
+
+  const STOP_TOKENS = new Set([
+    "de",
+    "la",
+    "el",
+    "en",
+    "y",
+    "a",
+    "al",
+    "del",
+    "los",
+    "las",
+    "lo",
+    "un",
+    "una",
+    "con",
+    "por",
+    "se",
+    "es",
+    "que",
+    "para",
+  ]);
+
+  function normalizeForSearch(s) {
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9ñ\s]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function buildSearchBlob(w) {
+    const rubroExtra = RUBRO_BUSQUEDA[w.rubro] || "";
+    const ubiLabel = w.ubicacion === "centro" ? "centro cultural sede municipal" : "taller propio";
+    return normalizeForSearch(
+      [
+        w.nombre,
+        w.rubro,
+        w.zona,
+        w.descripcion,
+        w.actividades,
+        w.colaboradorNombre,
+        w.direccion,
+        w.horarios,
+        w.redes,
+        w.telefono,
+        w.correo,
+        w.palabrasClave,
+        rubroExtra,
+        ubiLabel,
+      ].join(" ")
+    );
+  }
+
+  function workshopMatchesQuery(w, rawQ) {
+    const q = rawQ.trim();
+    if (!q) return true;
+    const hay = buildSearchBlob(w);
+    const tokens = normalizeForSearch(q)
+      .split(/\s+/)
+      .filter((t) => t.length > 0 && !STOP_TOKENS.has(t));
+    if (tokens.length === 0) return true;
+    return tokens.every((tok) => hay.indexOf(tok) >= 0);
+  }
+
+  function getFilteredWorkshopIndices() {
+    const q = workshopSearchQuery.trim();
+    if (!q) return WS.map((_, i) => i);
+    return WS.map((w, i) => (workshopMatchesQuery(w, q) ? i : null)).filter((x) => x != null);
+  }
+
+  function truncateText(str, n) {
+    const s = String(str || "").trim();
+    if (s.length <= n) return s;
+    return s.slice(0, Math.max(0, n - 1)) + "\u2026";
+  }
+
+  const workshopEstadoInicial = WS.map((w) => w.estado);
+
+  let currentUser = "anon";
+  let requestSeq = 1;
+  const pendingRequests = [];
+
+  function resetCatalogEstados() {
+    WS.forEach((w, i) => {
+      w.estado = workshopEstadoInicial[i];
+    });
+  }
+
+  function seedCatalogPendingRequests() {
+    pendingRequests.length = 0;
+    requestSeq = 1;
+    WS.forEach((w, idx) => {
+      if (w.estado !== "Pendiente") return;
+      pendingRequests.push({
+        id: requestSeq++,
+        colaborador: w.colaboradorNombre || "Alta de taller en portal",
+        taller: w.nombre,
+        rubro: w.rubro,
+        zona: w.zona,
+        catalogIndex: idx,
+      });
+    });
+  }
 
   function escapeHtml(s) {
     return String(s)
@@ -44,27 +189,260 @@
       .replace(/"/g, "&quot;");
   }
 
-  function tallerTooltipHtml(t) {
+  function tallerTooltipHtml(t, variant) {
+    const v = variant === "popup" ? "popup" : "tooltip";
     const src = encodeURI("../../" + t.imagen);
+    const actMax = v === "popup" ? 200 : 90;
+    const zonaBlock =
+      t.zona != null && t.zona !== ""
+        ? '<div class="map-tooltip-zona">' + escapeHtml(t.zona) + "</div>"
+        : "";
+    const estadoBlock =
+      currentUser === "admin" && t.estado
+        ? '<div class="map-tooltip-estado">' + escapeHtml(t.estado) + "</div>"
+        : "";
+    const actBlock =
+      t.actividades != null && String(t.actividades).trim() !== ""
+        ? '<div class="map-tooltip-act">' +
+          escapeHtml(truncateText(t.actividades, actMax)) +
+          "</div>"
+        : "";
     return (
-      '<div class="map-tooltip-body">' +
+      '<div class="map-tooltip-body map-tooltip-body--' +
+      v +
+      '">' +
+      '<div class="map-tooltip-media">' +
       '<img src="' +
       src +
-      '" alt="" class="map-tooltip-img" width="140" height="88" loading="lazy" />' +
-      '<div class="map-tooltip-text"><strong>' +
+      '" alt="" class="map-tooltip-img" loading="lazy" />' +
+      "</div>" +
+      '<div class="map-tooltip-main">' +
+      '<div class="map-tooltip-title">' +
       escapeHtml(t.nombre) +
-      "</strong><br/><span>" +
+      "</div>" +
+      '<div class="map-tooltip-rubro">' +
       escapeHtml(t.rubro) +
-      "</span></div></div>"
+      "</div>" +
+      zonaBlock +
+      actBlock +
+      estadoBlock +
+      "</div></div>"
     );
+  }
+
+  function workshopPinIcon(t, selected) {
+    const src = encodeURI("../../" + t.imagen);
+    const pinClass = selected ? "map-pin map-pin--selected" : "map-pin";
+    const dim = selected ? 78 : 58;
+    const anchor = Math.round(dim / 2);
+    return L.divIcon({
+      html:
+        '<div class="' +
+        pinClass +
+        '"><img src="' +
+        src +
+        '" alt="" loading="lazy" draggable="false" /></div>',
+      className: "map-pin-wrapper",
+      iconSize: [dim, dim],
+      iconAnchor: [anchor, dim],
+      popupAnchor: [0, -(dim - 8)],
+    });
+  }
+
+  let workshopMarkers = [];
+  let selectedWorkshopIndex = null;
+
+  function applyWorkshopMarkerIcons() {
+    workshopMarkers.forEach((marker, i) => {
+      if (!marker) return;
+      const on = selectedWorkshopIndex === i;
+      marker.setIcon(workshopPinIcon(WS[i], on));
+      marker.setZIndexOffset(on ? 900 : 0);
+    });
+  }
+
+  function clearWorkshopSelection() {
+    selectedWorkshopIndex = null;
+    const ul = document.getElementById("workshopListRoot");
+    if (ul) {
+      ul.querySelectorAll(".workshop-item.is-selected").forEach((el) => {
+        el.classList.remove("is-selected");
+      });
+    }
+    applyWorkshopMarkerIcons();
+  }
+
+  function selectWorkshop(idx, opts) {
+    opts = opts || {};
+    if (idx < 0 || idx >= WS.length) return;
+    selectedWorkshopIndex = idx;
+
+    const ul = document.getElementById("workshopListRoot");
+    if (ul) {
+      ul.querySelectorAll(".workshop-item.is-selected").forEach((el) => {
+        el.classList.remove("is-selected");
+      });
+      const li = ul.querySelector('[data-workshop-index="' + idx + '"]');
+      if (li) {
+        li.classList.add("is-selected");
+        if (opts.scrollList) {
+          li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
+    }
+
+    applyWorkshopMarkerIcons();
+
+    if (opts.centerMap && mapTalleresInstance) {
+      const t = WS[idx];
+      mapTalleresInstance.invalidateSize();
+      mapTalleresInstance.setView(L.latLng(t.lat, t.lng), 15, {
+        animate: true,
+      });
+    }
+    if (opts.openPopup && workshopMarkers[idx]) {
+      workshopMarkers[idx].openPopup();
+    }
+  }
+
+  function renderWorkshopList() {
+    const ul = document.getElementById("workshopListRoot");
+    const countEl = document.getElementById("workshopCount");
+    if (!ul) return;
+    const indices = getFilteredWorkshopIndices();
+    const q = workshopSearchQuery.trim();
+    if (countEl) {
+      countEl.textContent = q
+        ? indices.length + " de " + WS.length + " resultados"
+        : WS.length + " resultados";
+    }
+    if (selectedWorkshopIndex != null && !indices.includes(selectedWorkshopIndex)) {
+      clearWorkshopSelection();
+    }
+    const showEstado = currentUser === "admin";
+    ul.innerHTML = indices
+      .map((i) => {
+        const w = WS[i];
+        const src = encodeURI("../../" + w.imagen);
+        const tagClass = w.estado === "Pendiente" ? "tag-warn" : "tag-ok";
+        const estadoLabel = w.estado === "Pendiente" ? "Pendiente" : "Aprobado";
+        const estadoTag = showEstado
+          ? '<span class="tag ' + tagClass + '">' + estadoLabel + "</span>"
+          : "";
+        const sub =
+          truncateText(w.descripcion, 110) || truncateText(w.actividades, 110);
+        const subHtml = sub
+          ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
+          : "";
+        return (
+          "<li class=\"workshop-item\" data-workshop-index=\"" +
+          i +
+          "\" role=\"button\" tabindex=\"0\">" +
+          '<img class="workshop-item__thumb" src="' +
+          src +
+          '" width="44" height="44" alt="" loading="lazy"/>' +
+          "<div class=\"workshop-item__body\">" +
+          "<div class=\"workshop-item__title\">" +
+          escapeHtml(w.nombre) +
+          "</div>" +
+          subHtml +
+          "<div class=\"workshop-item__meta\">" +
+          '<span class="tag tag-rubro">' +
+          escapeHtml(w.rubro) +
+          "</span>" +
+          '<span class="tag tag-zona">' +
+          escapeHtml(w.zona) +
+          "</span>" +
+          estadoTag +
+          "</div></div></li>"
+        );
+      })
+      .join("");
+
+    if (selectedWorkshopIndex != null && selectedWorkshopIndex < WS.length) {
+      const li = ul.querySelector('[data-workshop-index="' + selectedWorkshopIndex + '"]');
+      if (li) li.classList.add("is-selected");
+    }
+    updateWorkshopMapFilter();
+  }
+
+  function bindWorkshopListInteraction() {
+    const ul = document.getElementById("workshopListRoot");
+    if (!ul || ul.dataset.workshopBound === "1") return;
+    ul.dataset.workshopBound = "1";
+
+    function activateFromList(idx) {
+      selectWorkshop(idx, {
+        scrollList: false,
+        centerMap: true,
+        openPopup: true,
+      });
+    }
+
+    ul.addEventListener("click", (ev) => {
+      const li = ev.target.closest(".workshop-item");
+      if (!li || !ul.contains(li)) return;
+      const idx = Number(li.getAttribute("data-workshop-index"));
+      if (Number.isNaN(idx)) return;
+      activateFromList(idx);
+    });
+
+    ul.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      const li = ev.target.closest(".workshop-item");
+      if (!li || !ul.contains(li)) return;
+      ev.preventDefault();
+      const idx = Number(li.getAttribute("data-workshop-index"));
+      if (Number.isNaN(idx)) return;
+      activateFromList(idx);
+    });
+  }
+
+  function bindWorkshopSearch() {
+    const input = document.getElementById("workshopSearch");
+    if (!input || input.dataset.searchBound === "1") return;
+    input.dataset.searchBound = "1";
+    let t = null;
+    input.addEventListener("input", () => {
+      window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        workshopSearchQuery = input.value;
+        renderWorkshopList();
+      }, 120);
+    });
   }
 
   let mapTalleresInstance = null;
 
+  function updateWorkshopMapFilter() {
+    if (!workshopMarkers.length) return;
+    const q = workshopSearchQuery.trim();
+    const set = new Set(getFilteredWorkshopIndices());
+    workshopMarkers.forEach((marker, i) => {
+      if (!marker) return;
+      if (!q) {
+        marker.setOpacity(1);
+        return;
+      }
+      marker.setOpacity(set.has(i) ? 1 : 0.2);
+    });
+    refitMapTalleres();
+  }
+
   function refitMapTalleres() {
-    if (!mapTalleresInstance || !TALLERES_MAPA.length) return;
-    const pts = TALLERES_MAPA.map((t) => [t.lat, t.lng]);
-    mapTalleresInstance.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
+    if (!mapTalleresInstance || !WS.length) return;
+    const q = workshopSearchQuery.trim();
+    const ix = getFilteredWorkshopIndices();
+    let useIx;
+    if (!q) {
+      useIx = WS.map((_, i) => i);
+    } else if (ix.length === 0) {
+      return;
+    } else {
+      useIx = ix;
+    }
+    const pts = useIx.map((i) => [WS[i].lat, WS[i].lng]);
+    mapTalleresInstance.fitBounds(pts, { padding: [48, 48], maxZoom: 15 });
   }
 
   function initMapTalleres() {
@@ -78,21 +456,49 @@
         maxZoom: 19,
       }).addTo(mapTalleresInstance);
 
-      TALLERES_MAPA.forEach((t) => {
-        const marker = L.marker([t.lat, t.lng]).addTo(mapTalleresInstance);
-        marker.bindPopup(tallerTooltipHtml(t), { maxWidth: 280, className: "map-workshop-popup" });
-        marker.bindTooltip(tallerTooltipHtml(t), {
-          direction: "top",
-          offset: [0, -8],
-          opacity: 1,
-          sticky: true,
-          className: "map-workshop-tooltip",
+      workshopMarkers = [];
+      WS.forEach((t, i) => {
+        const marker = L.marker([t.lat, t.lng], {
+          icon: workshopPinIcon(t, false),
+        }).addTo(mapTalleresInstance);
+        workshopMarkers[i] = marker;
+        marker.bindPopup(
+          function () {
+            return tallerTooltipHtml(WS[i], "popup");
+          },
+          {
+            maxWidth: 340,
+            minWidth: 280,
+            className: "map-workshop-popup",
+            autoPan: false,
+            keepInView: false,
+          }
+        );
+        marker.bindTooltip(
+          function () {
+            return tallerTooltipHtml(WS[i], "tooltip");
+          },
+          {
+            direction: "top",
+            offset: [0, -14],
+            opacity: 1,
+            sticky: true,
+            className: "map-workshop-tooltip map-workshop-tooltip--card",
+          }
+        );
+        marker.on("click", () => {
+          selectWorkshop(i, {
+            scrollList: true,
+            centerMap: false,
+            openPopup: true,
+          });
         });
       });
-      refitMapTalleres();
+      applyWorkshopMarkerIcons();
+      updateWorkshopMapFilter();
     } else {
       mapTalleresInstance.invalidateSize();
-      refitMapTalleres();
+      updateWorkshopMapFilter();
     }
   }
 
@@ -131,8 +537,6 @@
   const sessionBadge = document.getElementById("sessionBadge");
   const sessionStatus = document.getElementById("sessionStatus");
   const themeToggle = document.getElementById("themeToggle");
-
-  let currentUser = "anon";
 
   const users = {
     anon: {
@@ -186,9 +590,6 @@
     },
   };
 
-  let requestSeq = 1;
-  const pendingRequests = [];
-
   function applyTheme(mode) {
     const light = mode === "light";
     document.body.classList.toggle("light-mode", light);
@@ -237,6 +638,7 @@
     if (adminPanel) adminPanel.classList.toggle("is-hidden", !isAdmin);
     if (collabPanel) collabPanel.classList.toggle("is-hidden", !isCollaborator);
     if (isCollaborator) loadCollaboratorForm(currentUser);
+    renderWorkshopList();
     renderPendingRequests();
   }
 
@@ -248,19 +650,34 @@
       return;
     }
     const header =
-      '<div class="row head"><div class="cell">Colaborador</div><div class="cell">Taller</div><div class="cell">Acciones</div></div>';
+      '<div class="row head"><div class="cell">Origen / rubro</div><div class="cell">Taller</div><div class="cell">Acciones</div></div>';
     const rows = pendingRequests
-      .map(
-        (r) =>
-          `<div class="row">
-            <div class="cell"><strong>${r.colaborador}</strong><br/><small>${r.rubro}</small></div>
-            <div class="cell">${r.taller}</div>
-            <div class="cell actions">
-              <button class="btn btn-primary btn-approve" data-id="${r.id}" type="button">Aceptar</button>
-              <button class="btn btn-reject" data-id="${r.id}" type="button">Rechazar</button>
-            </div>
-          </div>`
-      )
+      .map((r) => {
+        const zonaBit =
+          r.zona != null && r.zona !== ""
+            ? " · " + escapeHtml(r.zona)
+            : "";
+        return (
+          '<div class="row">' +
+          '<div class="cell"><strong>' +
+          escapeHtml(r.colaborador) +
+          "</strong><br/><small>" +
+          escapeHtml(r.rubro) +
+          zonaBit +
+          "</small></div>" +
+          '<div class="cell">' +
+          escapeHtml(r.taller) +
+          "</div>" +
+          '<div class="cell actions">' +
+          '<button class="btn btn-primary btn-approve" data-id="' +
+          r.id +
+          '" type="button">Aceptar</button>' +
+          '<button class="btn btn-reject" data-id="' +
+          r.id +
+          '" type="button">Rechazar</button>' +
+          "</div></div>"
+        );
+      })
       .join("");
     adminRequestsList.innerHTML = header + rows;
   }
@@ -311,6 +728,7 @@
   }
 
   function reset() {
+    clearWorkshopSelection();
     if (toast) toast.classList.remove("is-visible");
     if (lastRun) lastRun.textContent = "—";
     if (currentCategory) currentCategory.textContent = "Tareas";
@@ -322,7 +740,13 @@
 
     if (category) category.value = "tareas";
     if (demoMode) demoMode.value = "basic";
-    setActive("seccion-inicio");
+    setActive("seccion-mapa");
+    window.setTimeout(initMapTalleres, 200);
+    workshopSearchQuery = "";
+    const wsInput = document.getElementById("workshopSearch");
+    if (wsInput) wsInput.value = "";
+    resetCatalogEstados();
+    seedCatalogPendingRequests();
     currentUser = "anon";
     applyUser();
   }
@@ -340,7 +764,8 @@
         colaborador,
         taller,
         rubro,
-        estado: "Pendiente",
+        zona: "",
+        catalogIndex: null,
       });
       renderPendingRequests();
       if (toast) {
@@ -360,8 +785,17 @@
       const idx = pendingRequests.findIndex((r) => r.id === id);
       if (idx < 0) return;
       const req = pendingRequests[idx];
+      if (
+        approveBtn &&
+        typeof req.catalogIndex === "number" &&
+        req.catalogIndex >= 0 &&
+        req.catalogIndex < WS.length
+      ) {
+        WS[req.catalogIndex].estado = "Aprobado";
+      }
       pendingRequests.splice(idx, 1);
       renderPendingRequests();
+      renderWorkshopList();
       if (toast) {
         if (approveBtn) {
           toast.textContent = `Solicitud de ${req.colaborador} aprobada.`;
@@ -405,7 +839,8 @@
     applyTheme("dark");
   }
 
-  applyUser();
+  bindWorkshopListInteraction();
+  bindWorkshopSearch();
   reset();
 })();
 

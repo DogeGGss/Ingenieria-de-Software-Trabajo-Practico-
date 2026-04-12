@@ -27,10 +27,7 @@
 
         <div class="topbar-right">
           <nav class="nav" aria-label="Navegacion">
-            <button class="nav-link is-active" data-target="seccion-inicio" type="button">
-              Inicio
-            </button>
-            <button class="nav-link" data-target="seccion-mapa" type="button">
+            <button class="nav-link is-active" data-target="seccion-mapa" type="button">
               Mapa conceptual
             </button>
             <button class="nav-link" data-target="seccion-acciones" type="button">
@@ -75,124 +72,61 @@
 
       <div class="layout">
         <main class="content">
-          <section class="content-section is-active" id="seccion-inicio">
-            <div class="hero">
-              <div class="hero-copy">
-                <h1 class="hero-title">Bienvenido al Portal de Talleres</h1>
-                <p class="hero-text">
-                  Vista preliminar de la aplicacion: estructura de pantallas, componentes
-                  visuales y flujo de usuario. La integracion funcional se desarrolla en la
-                  siguiente etapa.
-                </p>
-                <div class="hero-badges">
-                  <span class="badge">Hardcode</span>
-                  <span class="badge">Solo UI</span>
-                  <span class="badge">100% estatica</span>
+          <section class="content-section is-active" id="seccion-mapa">
+            <div class="home-split">
+              <div class="home-split__list">
+                <div class="workshop-list-head">
+                  <h1 class="workshop-list-title">Talleres y servicios</h1>
+                  <p class="section-sub workshop-list-sub">
+                    Datos alineados al formulario de registro de colaboradores (demo).
+                  </p>
+                  <div class="workshop-list-toolbar">
+                    <input
+                      type="search"
+                      id="workshopSearch"
+                      class="field-control workshop-search"
+                      placeholder="Nombre, instrumento, comida, rubro, actividad..."
+                      autocomplete="off"
+                      aria-label="Filtrar talleres"
+                    />
+                    <span class="workshop-count" id="workshopCount">38 resultados</span>
+                  </div>
                 </div>
+                <ul
+                  id="workshopListRoot"
+                  class="workshop-list"
+                  aria-label="Listado de talleres"
+                ></ul>
               </div>
-              <div class="hero-preview" aria-hidden="true">
-                <div class="preview-card">
-                  <div class="preview-title">
-                    Estado del sistema
-                    <span class="session-badge" id="sessionBadge">Visitante</span>
-                  </div>
-                  <div class="preview-status ok" id="sessionStatus">OK</div>
-                  <div class="preview-meta">
-                    <div>Ultima simulacion: <strong id="lastRun">—</strong></div>
-                    <div>Categoria: <strong id="currentCategory">Tareas</strong></div>
-                  </div>
-                </div>
-                <div class="preview-grid">
-                  <div class="mini-stat">
-                    <div class="mini-label">Tareas</div>
-                    <div class="mini-value" id="statTasks">8</div>
-                  </div>
-                  <div class="mini-stat">
-                    <div class="mini-label">Reportes</div>
-                    <div class="mini-value" id="statReports">3</div>
-                  </div>
-                  <div class="mini-stat">
-                    <div class="mini-label">Usuarios</div>
-                    <div class="mini-value" id="statUsers">12</div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="section-grid">
-              <div class="card">
-                <div class="card-title">Perfiles del sistema</div>
-                <div class="card-text">
-                  Se utilizan 3 perfiles hardcodeados para la demo: 1 administrador del
-                  portal y 2 colaboradores/talleristas que usan el sistema.
+              <div class="home-split__concept">
+                <div class="sr-for-js" aria-hidden="true">
+                  <span class="session-badge" id="sessionBadge">Visitante</span>
+                  <span id="sessionStatus">OK</span>
+                  <span id="lastRun">—</span>
+                  <span id="currentCategory">Tareas</span>
+                  <span id="statTasks">8</span>
+                  <span id="statReports">3</span>
+                  <span id="statUsers">12</span>
                 </div>
-              </div>
-              <div class="card profile-card">
-                <div class="profile-role">Administrador</div>
-                <div class="profile-name">Ana Moderadora</div>
-                <div class="profile-meta">
-                  Encargada de aprobar/rechazar talleres, seguir contenidos y gestionar la
-                  exportacion mensual a PrintAllTheThings.
-                </div>
-              </div>
-              <div class="card profile-card">
-                <div class="profile-role">Colaborador</div>
-                <div class="profile-name">Carlos Taller</div>
-                <div class="profile-meta">
-                  Ofrece un taller de musica en su propio espacio. Se registra en el
-                  portal, completa los datos del taller y espera la aprobacion.
-                </div>
-              </div>
-              <div class="card profile-card">
-                <div class="profile-role">Colaborador</div>
-                <div class="profile-name">Lucia Centro Cultural</div>
-                <div class="profile-meta">
-                  Coordina actividades dentro del centro cultural. Sus talleres usan la
-                  misma ubicacion que la sede principal en el mapa.
-                </div>
-              </div>
-            </div>
-          </section>
 
-          <section class="content-section" id="seccion-mapa">
-            <div class="section-header">
-              <h2>Mapa conceptual</h2>
-              <div class="section-sub">Vista preliminar de clases y filtros</div>
-            </div>
+                <div class="section-header concept-header">
+                  <h2>Mapa conceptual</h2>
+                  <div class="section-sub">Talleres aprobados en la zona</div>
+                </div>
 
-            <div class="callout">
-              <div class="callout-title">Placeholder visual</div>
-              <div class="callout-text">
-                En esta seccion luego se va a mostrar el mapa conceptual del sistema
-                (clases principales, relaciones y filtros de busqueda).
+                <div class="card map-leaflet-card">
+                  <div class="map-leaflet-header">
+                    <h3 class="map-leaflet-title">Talleres en el mapa</h3>
+                    <div class="section-sub">Leaflet + OpenStreetMap</div>
+                  </div>
+                  <p class="card-text map-leaflet-intro">
+                    Coordenadas aproximadas por localidad (zona); la vista encuadra todos los
+                    marcadores con <code>fitBounds</code>.
+                  </p>
+                  <div id="mapTalleres" class="leaflet-map leaflet-map--embed" aria-label="Mapa de talleres"></div>
+                </div>
               </div>
-            </div>
-            <div class="section-grid">
-              <div class="card">
-                <div class="card-title">Clase: Usuario</div>
-                <div class="card-text">Tipos previstos: Visitante, Colaborador, Moderador.</div>
-              </div>
-              <div class="card">
-                <div class="card-title">Clase: Taller</div>
-                <div class="card-text">Datos, estado de aprobacion, ubicacion y horarios.</div>
-              </div>
-              <div class="card">
-                <div class="card-title">Clase: Exportacion</div>
-                <div class="card-text">Envio mensual, estado, errores y reintentos.</div>
-              </div>
-            </div>
-
-            <div class="card card-wide map-leaflet-card">
-              <div class="map-leaflet-header">
-                <h3 class="map-leaflet-title">Talleres en el mapa</h3>
-                <div class="section-sub">Leaflet + capa OpenStreetMap (POC)</div>
-              </div>
-              <p class="card-text map-leaflet-intro">
-                Datos de ejemplo con coordenadas fijas. La camara se ajusta sola para mostrar
-                todos los marcadores (<code>fitBounds</code>). Para ubicar por direccion haria
-                falta un servicio de geocodificacion (no incluido en este prototipo).
-              </p>
-              <div id="mapTalleres" class="leaflet-map" aria-label="Mapa de talleres"></div>
             </div>
           </section>
 
@@ -203,11 +137,11 @@
             </div>
 
             <div class="actions-grid">
-              <div class="card card-wide">
+                <div class="card card-wide">
                 <div class="card-title">Operaciones del sistema</div>
                 <div class="card-text">
-                  Usá el panel de la izquierda para visualizar variaciones de estado en la
-                  interfaz. Esta capa es exclusivamente de presentacion.
+                  Panel de prueba de la interfaz. Esta capa es solo de presentacion en el
+                  prototipo.
                 </div>
                 <div class="divider"></div>
                 <div class="inline-stats">
@@ -225,8 +159,8 @@
               <div class="card role-panel" id="adminPanel">
                 <div class="card-title">Acciones de administrador</div>
                 <div class="card-text">
-                  Revisar solicitudes pendientes de colaboradores y decidir aprobacion o
-                  rechazo segun la informacion enviada.
+                  Revisar solicitudes de alta (talleres pendientes del catalogo demo y envios
+                  de colaboradores) y decidir aprobacion o rechazo.
                 </div>
                 <div class="table-like" id="adminRequestsList"></div>
               </div>
@@ -316,6 +250,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="../js/workshops-catalog.js"></script>
     <script src="../js/main.js"></script>
   </body>
 </html>
