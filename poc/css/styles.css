@@ -899,13 +899,6 @@ body.light-mode .tag {
   outline: none;
 }
 
-.field-span-image{
-  line-height: 1.55;
-  border: #06060749 1px solid;
-  border-radius: 10px;
-  padding: 2px;
-}
-
 .preview-image{
   display:none; 
   max-width: 300px; 
