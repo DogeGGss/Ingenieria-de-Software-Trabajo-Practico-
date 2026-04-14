@@ -36,6 +36,7 @@
       direccion: "Av. de Mayo 1450, Malvinas",
       horarios: "Lun a Vie 18:00 a 21:00",
       palabrasClave: "musica guitarra canto rock folklore",
+      imagen: "img-talleres/taller guitarra.jpeg",
     }),
     row({
       nombre: "Centro de danza comunitaria",
@@ -52,6 +53,7 @@
       direccion: "Sede cultural Los Polvorines, acceso principal",
       horarios: "Mar y Jue 17:00 a 20:00",
       palabrasClave: "danza baile movimiento cuerpo folclore",
+      imagen: "img-talleres/Centro de danza.jpg",
     }),
     row({
       nombre: "Taller de ceramica El Horno",
@@ -68,6 +70,7 @@
       direccion: "Pasaje Horno 88, Grand Bourg",
       horarios: "Sab 10:00 a 14:00",
       palabrasClave: "ceramica arcilla arte taller horno",
+      imagen: "img-talleres/taller ceramica.jpeg",
     }),
     row({
       nombre: "Fotografia en barrio",
@@ -84,6 +87,7 @@
       direccion: "Colectora Gral Paz km 23, local 4",
       horarios: "Dom 9:00 a 13:00",
       palabrasClave: "foto camara imagen retrato calle",
+      imagen: "img-talleres/taller fotografia.jpg",
     }),
     row({
       nombre: "Teatro del encuentro",
@@ -100,6 +104,7 @@
       direccion: "Centro vecinal Jose C. Paz, sala 2",
       horarios: "Mie 19:00 a 22:00",
       palabrasClave: "teatro actuacion escena obra",
+      imagen: "img-talleres/teatro2.jpg",
     }),
     row({
       nombre: "Informatica para adultos mayores",
@@ -116,6 +121,7 @@
       direccion: "Biblioteca popular San Miguel",
       horarios: "Lun y Vie 10:00 a 12:00",
       palabrasClave: "informatica computadora celular internet curso",
+      imagen: "img-talleres/informatica.jpg",
     }),
     row({
       nombre: "Yoga matutino en el parque",
@@ -132,6 +138,7 @@
       direccion: "Parque lineal Del Viso, ingreso norte",
       horarios: "Mar y Jue 8:00 a 9:00",
       palabrasClave: "yoga bienestar estiramiento meditacion",
+      imagen: "img-talleres/yoga parque.jpg",
     }),
     row({
       nombre: "Panaderia artesanal",
@@ -148,6 +155,7 @@
       direccion: "Ruta 9 y colectora, galpon 3",
       horarios: "Sab 15:00 a 19:00",
       palabrasClave: "pan comida cocina horno gastronomia restaurante desayuno",
+      imagen: "img-talleres/produccion-artesanal.jpg",
     }),
     row({
       nombre: "Lengua de senas argentina (LSA)",
@@ -164,6 +172,7 @@
       direccion: "Escuela 12, anexo inclusivo",
       horarios: "Jue 18:00 a 20:00",
       palabrasClave: "lsa senas inclusion accesibilidad",
+      imagen: "img-talleres/senas.jpg",
     }),
     row({
       nombre: "Escritura creativa",
@@ -180,6 +189,7 @@
       direccion: "Calle Sarmiento 2100, Los Polvorines",
       horarios: "Mie 19:30 a 21:30",
       palabrasClave: "literatura cuento poesia lectura libro",
+      imagen: "img-talleres/escritura creativa.jpg",
     }),
     row({
       nombre: "Jardineria y huerta urbana",
@@ -196,6 +206,7 @@
       direccion: "Huerta comunitaria Grand Bourg",
       horarios: "Sab 9:00 a 12:00",
       palabrasClave: "jardin plantas huerta compost ecologia",
+      imagen: "img-talleres/huerta-jardineria.webp",
     }),
     row({
       nombre: "Bordado y textil",
@@ -212,6 +223,7 @@
       direccion: "Av. San Martin 3400",
       horarios: "Mar 16:00 a 19:00",
       palabrasClave: "bordado textil costura manualidades hilo",
+      imagen: "img-talleres/images.jpg",
     }),
     row({
       nombre: "Repaso de matematica secundaria",
@@ -228,6 +240,7 @@
       direccion: "Biblioteca Jose C. Paz, sala estudiantes",
       horarios: "Lun a Vie 15:00 a 18:00",
       palabrasClave: "matematica escuela secundaria apoyo estudio",
+      imagen: "img-talleres/matematicas-secundaria.png",
     }),
     row({
       nombre: "Serigrafia y estampado",
@@ -244,6 +257,7 @@
       direccion: "Cochabamba 780, San Miguel",
       horarios: "Vie 14:00 a 19:00",
       palabrasClave: "serigrafia estampado diseno remera",
+      imagen: "img-talleres/serigrafia.png",
     }),
     row({
       nombre: "Ajedrez para principiantes",
@@ -260,6 +274,7 @@
       direccion: "Polideportivo Del Viso",
       horarios: "Sab 11:00 a 13:00",
       palabrasClave: "ajedrez juego estrategia torneo",
+      imagen: "img-talleres/ajedrez.jpg",
     }),
     row({
       nombre: "Violin y ensamble infantil",
@@ -276,6 +291,7 @@
       direccion: "Escuela primaria 45, anexo musica",
       horarios: "Mie y Vie 16:00 a 17:30",
       palabrasClave: "violin musica instrumento ninos orquesta",
+      imagen: "img-talleres/violin.jpg",
     }),
     row({
       nombre: "Nutricion y taller de cocina saludable",
@@ -292,6 +308,7 @@
       direccion: "CAPS Malvinas, sala multifuncion",
       horarios: "Jue 10:00 a 12:00",
       palabrasClave: "nutricion salud cocina comida alimentacion restaurante casero",
+      imagen: "img-talleres/cocina saludable.jpg",
     }),
     row({
       nombre: "Origami y papel reciclado",
@@ -308,6 +325,7 @@
       direccion: "Calle Fournier 560",
       horarios: "Dom 16:00 a 18:00",
       palabrasClave: "origami papel manualidades reciclaje",
+      imagen: "img-talleres/origami.jpg",
     }),
     row({
       nombre: "Historia local del partido",
@@ -324,6 +342,7 @@
       direccion: "Museo barrial Grand Bourg",
       horarios: "Sab 18:00 a 20:00",
       palabrasClave: "historia memoria archivo barrio",
+      imagen: "img-talleres/partido-1.webp",
     }),
     row({
       nombre: "Guitarra electrica nivel 1",
@@ -340,6 +359,7 @@
       direccion: "Taller sonoro Pablo Podesta, galpon 7",
       horarios: "Mar y Jue 20:00 a 22:00",
       palabrasClave: "guitarra electrica musica rock amplificador",
+      imagen: "img-talleres/guitarra.jpg",
     }),
     row({
       nombre: "Zumba vecinal",
@@ -356,6 +376,7 @@
       direccion: "Plaza central Jose C. Paz",
       horarios: "Lun y Mie 19:00 a 20:00",
       palabrasClave: "zumba danza fitness baile latino",
+      imagen: "img-talleres/zumba.jpg",
     }),
     row({
       nombre: "Quimica divertida (secundaria)",
@@ -372,6 +393,7 @@
       direccion: "Club de ciencias San Miguel",
       horarios: "Sab 10:00 a 12:00",
       palabrasClave: "quimica ciencia experimento escuela",
+      imagen: "img-talleres/quimica.jpg",
     }),
     row({
       nombre: "Karate infantil",
@@ -388,6 +410,7 @@
       direccion: "Gimnasio municipal Del Viso",
       horarios: "Mar y Jue 17:00 a 18:00",
       palabrasClave: "karate deporte artes marciales ninos",
+      imagen: "img-talleres/karate.jpg",
     }),
     row({
       nombre: "Ukelele en grupo",
@@ -404,6 +427,7 @@
       direccion: "Barrio San Jorge, Tortuguitas, casa club",
       horarios: "Vie 18:00 a 20:00",
       palabrasClave: "ukelele ukulele musica canto acordes taller de musica",
+      imagen: "img-talleres/ukelele.jpg",
     }),
     row({
       nombre: "Web para emprendedores",
@@ -420,6 +444,7 @@
       direccion: "Coworking Malvinas, piso 2",
       horarios: "Sab 10:00 a 13:00",
       palabrasClave: "web internet pagina emprendedor tecnologia",
+      imagen: "img-talleres/emprendedores.webp",
     }),
     row({
       nombre: "Expresion plastica ninos",
@@ -436,6 +461,7 @@
       direccion: "Jardin comunitario Los Polvorines",
       horarios: "Mie 16:00 a 17:30",
       palabrasClave: "arte pintura ninos plastico color",
+      imagen: "img-talleres/plastica.jpg",
     }),
     row({
       nombre: "Risoterapia y relajacion",
@@ -452,6 +478,7 @@
       direccion: "Centro de dia Grand Bourg",
       horarios: "Jue 11:00 a 12:30",
       palabrasClave: "risoterapia bienestar risa relajacion salud emocional",
+      imagen: "img-talleres/risoterapia.jpg",
     }),
     row({
       nombre: "Marroquineria basica",
@@ -468,6 +495,7 @@
       direccion: "Taller cuero Pablo Podesta, local 2",
       horarios: "Sab 14:00 a 18:00",
       palabrasClave: "cuero marroquineria artesania cartera",
+      imagen: "img-talleres/marroquineria.jpg",
     }),
     row({
       nombre: "Salsa y bachata social",
@@ -484,6 +512,7 @@
       direccion: "Salon cultural Jose C. Paz",
       horarios: "Vie 21:00 a 23:00",
       palabrasClave: "salsa bachata danza baile social",
+      imagen: "img-talleres/salsa.png",
     }),
     row({
       nombre: "Corte y confeccion nivel inicial",
@@ -500,6 +529,7 @@
       direccion: "Taller textil San Miguel, pasillo 5",
       horarios: "Mar y Jue 14:00 a 17:00",
       palabrasClave: "costura confeccion textil maquina modista",
+      imagen: "img-talleres/corte.jpg",
     }),
     row({
       nombre: "Pintura al oleo",
@@ -516,6 +546,7 @@
       direccion: "Atelier Del Viso, 1er piso",
       horarios: "Dom 17:00 a 20:00",
       palabrasClave: "pintura oleo arte lienzo color",
+      imagen: "img-talleres/pintura.jpg",
     }),
     row({
       nombre: "Electricidad domiciliaria basica",
@@ -532,6 +563,7 @@
       direccion: "Taller oficios Tortuguitas",
       horarios: "Sab 9:00 a 12:00",
       palabrasClave: "electricidad oficio casa instalacion luz",
+      imagen: "img-talleres/electricidad.png",
     }),
     row({
       nombre: "First aid y RCP vecinal",
@@ -548,6 +580,7 @@
       direccion: "Bomberos voluntarios Malvinas, aula",
       horarios: "Dom 10:00 a 13:00",
       palabrasClave: "primeros auxilios rcp salud emergencia rescate",
+      imagen: "img-talleres/First aid y RCP.jpg",
     }),
     row({
       nombre: "Dibujo anatomico",
@@ -564,6 +597,7 @@
       direccion: "Escuela de arte Los Polvorines",
       horarios: "Mie 18:00 a 20:30",
       palabrasClave: "dibujo anatomia arte lapiz cuerpo",
+      imagen: "img-talleres/anatomico.webp",
     }),
     row({
       nombre: "Lectura y club de cuentos",
@@ -580,6 +614,7 @@
       direccion: "Biblioteca Grand Bourg",
       horarios: "Sab 11:00 a 12:30",
       palabrasClave: "lectura cuentos libro ninos familia",
+      imagen: "img-talleres/lectura.jpg",
     }),
     row({
       nombre: "Tango milonguero",
@@ -596,6 +631,7 @@
       direccion: "Centro cultural Pablo Podesta",
       horarios: "Sab 20:30 a 23:00",
       palabrasClave: "tango danza milonga baile abrazo",
+      imagen: "img-talleres/tango.jpg",
     }),
     row({
       nombre: "Bateria y ritmo",
@@ -612,6 +648,7 @@
       direccion: "Sotano sonido Jose C. Paz",
       horarios: "Jue 19:00 a 21:00",
       palabrasClave: "bateria musica ritmo percusion rock",
+      imagen: "img-talleres/bateria.jpg",
     }),
     row({
       nombre: "Costura y arreglos express",
@@ -628,6 +665,7 @@
       direccion: "Puesto feria San Miguel, pasillo textil",
       horarios: "Sab 9:00 a 14:00",
       palabrasClave: "costura textil arreglos modista ropa",
+      imagen: "img-talleres/Costura.webp",
     }),
   ];
 })();

@@ -37,7 +37,6 @@
   const radioPorZona = 0.00205;
   const estirarLng = 1.38;
   WS.forEach((w) => {
-    w.imagen = thumbFileForRubro(w.rubro);
     const base = ZONA_CENTRO[w.zona] || ZONA_DEFAULT;
     const k = porZona[w.zona] = (porZona[w.zona] || 0) + 1;
     const j = k - 1;

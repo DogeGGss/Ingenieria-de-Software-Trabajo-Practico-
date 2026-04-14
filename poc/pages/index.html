@@ -1,177 +1,149 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portal de Talleres - Prototipo</title>
-    <link rel="stylesheet" href="../css/styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-  </head>
-  <body>
-    <div class="app">
-      <header class="topbar">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">
-            <img src="../../160x160 logo ungs.jpg" alt="Logo del portal" class="logo-img" />
-          </div>
-          <div class="brand-text">
-            <div class="brand-title">Portal de Talleres</div>
-            <div class="brand-subtitle">Prototipo visual de la aplicacion</div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Talleres - Prototipo</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <img src="../../160x160 logo ungs.jpg" alt="Logo del portal" class="logo-img" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">Portal de Talleres</div>
+          <div class="brand-subtitle">Prototipo visual de la aplicacion</div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <nav class="nav" aria-label="Navegacion">
+          <button class="nav-link is-active" data-target="seccion-mapa" type="button">
+            Mapa conceptual
+          </button>
+          <button class="nav-link" data-target="seccion-acciones" type="button">
+            Acciones
+          </button>
+        </nav>
+
+        <label class="theme-toggle" for="themeToggle" aria-label="Cambiar tema">
+          <span class="theme-icon-wrap">
+            <img src="../../luna 512Elv2.png" alt="Modo oscuro" class="theme-icon theme-icon-moon" />
+          </span>
+          <input id="themeToggle" type="checkbox" class="theme-input" />
+          <span class="theme-track">
+            <span class="theme-knob"></span>
+          </span>
+          <span class="theme-icon-wrap">
+            <img src="../../Sol 256elv2.png" alt="Modo claro" class="theme-icon theme-icon-sun" />
+          </span>
+        </label>
+
+        <div class="session">
+          <button class="session-toggle" id="sessionToggle" type="button">
+            <span id="sessionLabel">Iniciar sesion</span>
+          </button>
+          <div class="session-menu" id="sessionMenu">
+            <button class="session-option" data-user="admin" type="button">
+              Ana Moderadora (Admin)
+            </button>
+            <button class="session-option" data-user="carlos" type="button">
+              Carlos Taller (Colaborador)
+            </button>
+            <button class="session-option" data-user="lucia" type="button">
+              Lucia Centro Cultural (Colaborador)
+            </button>
+            <button class="session-option" data-user="anon" type="button">
+              Cerrar sesion / Visitante
+            </button>
           </div>
         </div>
+      </div>
+    </header>
 
-        <div class="topbar-right">
-          <nav class="nav" aria-label="Navegacion">
-            <button class="nav-link is-active" data-target="seccion-mapa" type="button">
-              Mapa conceptual
-            </button>
-            <button class="nav-link" data-target="seccion-acciones" type="button">
-              Acciones
-            </button>
-          </nav>
+    <div class="layout">
+      <main class="content">
+        <section class="content-section is-active" id="seccion-mapa">
+          <div class="home-split">
+            <div class="home-split__list">
+              <div class="workshop-list-head">
+                <h1 class="workshop-list-title">Talleres y servicios</h1>
+                <p class="section-sub workshop-list-sub">
+                  Datos alineados al formulario de registro de colaboradores (demo).
+                </p>
+                <div class="workshop-list-toolbar">
+                  <input type="search" id="workshopSearch" class="field-control workshop-search"
+                    placeholder="Nombre, instrumento, comida, rubro, actividad..." autocomplete="off"
+                    aria-label="Filtrar talleres" />
+                  <span class="workshop-count" id="workshopCount">38 resultados</span>
+                </div>
+              </div>
+              <ul id="workshopListRoot" class="workshop-list" aria-label="Listado de talleres"></ul>
+            </div>
 
-          <label class="theme-toggle" for="themeToggle" aria-label="Cambiar tema">
-            <span class="theme-icon-wrap">
-              <img src="../../luna 512Elv2.png" alt="Modo oscuro" class="theme-icon theme-icon-moon" />
-            </span>
-            <input id="themeToggle" type="checkbox" class="theme-input" />
-            <span class="theme-track">
-              <span class="theme-knob"></span>
-            </span>
-            <span class="theme-icon-wrap">
-              <img src="../../Sol 256elv2.png" alt="Modo claro" class="theme-icon theme-icon-sun" />
-            </span>
-          </label>
+            <div class="home-split__concept">
+              <div class="sr-for-js" aria-hidden="true">
+                <span class="session-badge" id="sessionBadge">Visitante</span>
+                <span id="sessionStatus">OK</span>
+                <span id="lastRun">—</span>
+                <span id="currentCategory">Tareas</span>
+                <span id="statTasks">8</span>
+                <span id="statReports">3</span>
+                <span id="statUsers">12</span>
+              </div>
 
-          <div class="session">
-            <button class="session-toggle" id="sessionToggle" type="button">
-              <span id="sessionLabel">Iniciar sesion</span>
-            </button>
-            <div class="session-menu" id="sessionMenu">
-              <button class="session-option" data-user="admin" type="button">
-                Ana Moderadora (Admin)
-              </button>
-              <button class="session-option" data-user="carlos" type="button">
-                Carlos Taller (Colaborador)
-              </button>
-              <button class="session-option" data-user="lucia" type="button">
-                Lucia Centro Cultural (Colaborador)
-              </button>
-              <button class="session-option" data-user="anon" type="button">
-                Cerrar sesion / Visitante
-              </button>
+              <div class="section-header concept-header">
+                <h2>Mapa conceptual</h2>
+                <div class="section-sub">Talleres aprobados en la zona</div>
+              </div>
+
+              <div class="card map-leaflet-card">
+                <div class="map-leaflet-header">
+                  <h3 class="map-leaflet-title">Talleres en el mapa</h3>
+                  <div class="section-sub">Leaflet + OpenStreetMap</div>
+                </div>
+                <p class="card-text map-leaflet-intro">
+                  Coordenadas aproximadas por localidad (zona); la vista encuadra todos los
+                  marcadores con <code>fitBounds</code>.
+                </p>
+                <div id="mapTalleres" class="leaflet-map leaflet-map--embed" aria-label="Mapa de talleres"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </section>
 
-      <div class="layout">
-        <main class="content">
-          <section class="content-section is-active" id="seccion-mapa">
-            <div class="home-split">
-              <div class="home-split__list">
-                <div class="workshop-list-head">
-                  <h1 class="workshop-list-title">Talleres y servicios</h1>
-                  <p class="section-sub workshop-list-sub">
-                    Datos alineados al formulario de registro de colaboradores (demo).
-                  </p>
-                  <div class="workshop-list-toolbar">
-                    <input
-                      type="search"
-                      id="workshopSearch"
-                      class="field-control workshop-search"
-                      placeholder="Nombre, instrumento, comida, rubro, actividad..."
-                      autocomplete="off"
-                      aria-label="Filtrar talleres"
-                    />
-                    <span class="workshop-count" id="workshopCount">38 resultados</span>
-                  </div>
-                </div>
-                <ul
-                  id="workshopListRoot"
-                  class="workshop-list"
-                  aria-label="Listado de talleres"
-                ></ul>
+        <section class="content-section" id="seccion-acciones">
+
+          <div class="actions-grid">
+            <div class="card role-panel" id="adminPanel">
+              <div class="card-title">Acciones de administrador</div>
+              <div class="card-text">
+                Revisar solicitudes de alta (talleres pendientes del catalogo demo y envios
+                de colaboradores) y decidir aprobacion o rechazo.
               </div>
-
-              <div class="home-split__concept">
-                <div class="sr-for-js" aria-hidden="true">
-                  <span class="session-badge" id="sessionBadge">Visitante</span>
-                  <span id="sessionStatus">OK</span>
-                  <span id="lastRun">—</span>
-                  <span id="currentCategory">Tareas</span>
-                  <span id="statTasks">8</span>
-                  <span id="statReports">3</span>
-                  <span id="statUsers">12</span>
-                </div>
-
-                <div class="section-header concept-header">
-                  <h2>Mapa conceptual</h2>
-                  <div class="section-sub">Talleres aprobados en la zona</div>
-                </div>
-
-                <div class="card map-leaflet-card">
-                  <div class="map-leaflet-header">
-                    <h3 class="map-leaflet-title">Talleres en el mapa</h3>
-                    <div class="section-sub">Leaflet + OpenStreetMap</div>
-                  </div>
-                  <p class="card-text map-leaflet-intro">
-                    Coordenadas aproximadas por localidad (zona); la vista encuadra todos los
-                    marcadores con <code>fitBounds</code>.
-                  </p>
-                  <div id="mapTalleres" class="leaflet-map leaflet-map--embed" aria-label="Mapa de talleres"></div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="content-section" id="seccion-acciones">
-            <div class="section-header">
-              <h2>Acciones y flujo</h2>
-              <div class="section-sub">Interacciones segun nivel de acceso</div>
+              <div class="table-like" id="adminRequestsList"></div>
             </div>
 
-            <div class="actions-grid">
-                <div class="card card-wide">
-                <div class="card-title">Operaciones del sistema</div>
-                <div class="card-text">
-                  Panel de prueba de la interfaz. Esta capa es solo de presentacion en el
-                  prototipo.
-                </div>
-                <div class="divider"></div>
-                <div class="inline-stats">
-                  <div class="inline-stat">
-                    <div class="inline-label">Ultimo run</div>
-                    <div class="inline-value" id="inlineLastRun">—</div>
-                  </div>
-                  <div class="inline-stat">
-                    <div class="inline-label">Categoria</div>
-                    <div class="inline-value" id="inlineCategory">Tareas</div>
-                  </div>
-                </div>
+            <div class="card role-panel" id="collabPanel">
+              <div class="card-title">Regístrate en la comunidad de talleres</div>
+              <div class="card-text">
+                Únete a una red de talleres. Envie sus datos personales y los de su taller para su revision por parte
+                del
+                administrador.
               </div>
-
-              <div class="card role-panel" id="adminPanel">
-                <div class="card-title">Acciones de administrador</div>
-                <div class="card-text">
-                  Revisar solicitudes de alta (talleres pendientes del catalogo demo y envios
-                  de colaboradores) y decidir aprobacion o rechazo.
-                </div>
-                <div class="table-like" id="adminRequestsList"></div>
-              </div>
-
-              <div class="card role-panel" id="collabPanel">
-                <div class="card-title">Acciones de colaborador</div>
-                <div class="card-text">
-                  Enviar datos del colaborador y del taller para su revision por parte del
-                  administrador.
-                </div>
+              <hr class="hr-register">
+              <div class="panel-data">
                 <div class="panel-group">
+                  <div class="data-text">
+                    Datos personales del responsable del taller
+                  </div>
                   <label class="field">
                     <span class="field-label">Nombre y apellido</span>
                     <input class="field-control" id="fNombre" value="Carlos Taller" />
@@ -184,13 +156,19 @@
                     <span class="field-label">Correo</span>
                     <input class="field-control" id="fCorreo" value="carlos@correo.com" />
                   </label>
+                </div>
+                <div class="panel-group">
+                  <div class="data-text">
+                    Datos del taller
+                  </div>
                   <label class="field">
                     <span class="field-label">Nombre del taller</span>
                     <input class="field-control" id="fTaller" value="Taller Melodia Urbana" />
                   </label>
                   <label class="field">
                     <span class="field-label">Descripcion general</span>
-                    <textarea class="field-control" id="fDescripcion" rows="2">Clases iniciales e intermedias para adolescentes y adultos.</textarea>
+                    <textarea class="field-control" id="fDescripcion"
+                      rows="2">Clases iniciales e intermedias para adolescentes y adultos.</textarea>
                   </label>
                   <label class="field">
                     <span class="field-label">Actividades ofrecidas</span>
@@ -220,38 +198,36 @@
                     <input class="field-control" id="fHorarios" value="Lun a Vie 18:00 a 21:00" />
                   </label>
                 </div>
-                <div class="panel-actions" style="margin-top:12px">
-                  <button class="btn btn-primary" type="button" id="btnEnviarSolicitud">
-                    Enviar para aprobacion
-                  </button>
-                </div>
+              </div>
+              <div class="panel-actions" style="margin-top:12px">
+                <button class="btn btn-primary" type="button" id="btnEnviarSolicitud">
+                  Enviar para aprobacion
+                </button>
               </div>
             </div>
+          </div>
 
-            <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
-              Mensaje de demo.
-            </div>
-          </section>
-        </main>
-      </div>
-
-      <footer class="footer">
-        <div class="footer-left">
-          Grupo 4 - Fonseca, Ulises - Alan Emilio Riggio - Arias, Diego Alexis - Perea, Brian
-        </div>
-        <div class="footer-right">
-          Ingenieria de Software - Trabajo Practico
-        </div>
-      </footer>
+          <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+            Mensaje de demo.
+          </div>
+        </section>
+      </main>
     </div>
 
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <script src="../js/workshops-catalog.js"></script>
-    <script src="../js/main.js"></script>
-  </body>
-</html>
+    <footer class="footer">
+      <div class="footer-left">
+        Grupo 4 - Fonseca, Ulises - Alan Emilio Riggio - Arias, Diego Alexis - Perea, Brian
+      </div>
+      <div class="footer-right">
+        Ingenieria de Software - Trabajo Practico
+      </div>
+    </footer>
+  </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="../js/workshops-catalog.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>
