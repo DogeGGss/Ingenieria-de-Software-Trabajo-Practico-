@@ -337,9 +337,11 @@
           "<li class=\"workshop-item\" data-workshop-index=\"" +
           i +
           "\" role=\"button\" tabindex=\"0\">" +
+          '<div class="workshop-item__visual" aria-hidden="true">' +
           '<img class="workshop-item__thumb" src="' +
           src +
-          '" width="44" height="44" alt="" loading="lazy"/>' +
+          '" alt="" loading="lazy" decoding="async"/>' +
+          "</div>" +
           "<div class=\"workshop-item__body\">" +
           "<div class=\"workshop-item__title\">" +
           escapeHtml(w.nombre) +
@@ -495,21 +497,32 @@
       });
       applyWorkshopMarkerIcons();
       updateWorkshopMapFilter();
+      window.requestAnimationFrame(() => {
+        mapTalleresInstance.invalidateSize();
+        refitMapTalleres();
+        window.requestAnimationFrame(() => {
+          mapTalleresInstance.invalidateSize();
+          refitMapTalleres();
+        });
+      });
     } else {
       mapTalleresInstance.invalidateSize();
       updateWorkshopMapFilter();
     }
   }
 
-  navLinks.forEach((btn) => {
-    btn.addEventListener("click", () => {
+  const nav = document.querySelector("nav.nav");
+  if (nav) {
+    nav.addEventListener("click", (e) => {
+      const btn = e.target.closest("button.nav-link");
+      if (!btn || !nav.contains(btn)) return;
       const targetId = btn.getAttribute("data-target");
       if (targetId) setActive(targetId);
       if (targetId === "seccion-mapa") {
         window.setTimeout(initMapTalleres, 120);
       }
     });
-  });
+  }
 
   const demoMode = document.getElementById("demoMode");
   const category = document.getElementById("category");
@@ -820,7 +833,9 @@
       sessionMenu.classList.remove("is-open");
     });
     document.addEventListener("click", (ev) => {
-      if (!sessionMenu.contains(ev.target) && ev.target !== sessionToggle) {
+      const insideMenu = sessionMenu.contains(ev.target);
+      const insideToggle = sessionToggle.contains(ev.target);
+      if (!insideMenu && !insideToggle) {
         sessionMenu.classList.remove("is-open");
       }
     });

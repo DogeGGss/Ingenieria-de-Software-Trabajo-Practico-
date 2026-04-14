@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portal de Talleres - Prototipo</title>
+  <link rel="icon" href="../../160x160%20logo%20ungs.jpg" type="image/jpeg" sizes="any" />
+  <link rel="apple-touch-icon" href="../../160x160%20logo%20ungs.jpg" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -26,7 +28,7 @@
       <div class="topbar-right">
         <nav class="nav" aria-label="Navegacion">
           <button class="nav-link is-active" data-target="seccion-mapa" type="button">
-            Mapa conceptual
+            Inicio
           </button>
           <button class="nav-link" data-target="seccion-acciones" type="button">
             Acciones
@@ -75,9 +77,6 @@
             <div class="home-split__list">
               <div class="workshop-list-head">
                 <h1 class="workshop-list-title">Talleres y servicios</h1>
-                <p class="section-sub workshop-list-sub">
-                  Datos alineados al formulario de registro de colaboradores (demo).
-                </p>
                 <div class="workshop-list-toolbar">
                   <input type="search" id="workshopSearch" class="field-control workshop-search"
                     placeholder="Nombre, instrumento, comida, rubro, actividad..." autocomplete="off"
@@ -99,20 +98,10 @@
                 <span id="statUsers">12</span>
               </div>
 
-              <div class="section-header concept-header">
-                <h2>Mapa conceptual</h2>
-                <div class="section-sub">Talleres aprobados en la zona</div>
-              </div>
-
               <div class="card map-leaflet-card">
                 <div class="map-leaflet-header">
                   <h3 class="map-leaflet-title">Talleres en el mapa</h3>
-                  <div class="section-sub">Leaflet + OpenStreetMap</div>
                 </div>
-                <p class="card-text map-leaflet-intro">
-                  Coordenadas aproximadas por localidad (zona); la vista encuadra todos los
-                  marcadores con <code>fitBounds</code>.
-                </p>
                 <div id="mapTalleres" class="leaflet-map leaflet-map--embed" aria-label="Mapa de talleres"></div>
               </div>
             </div>
