@@ -912,6 +912,145 @@ body.light-mode .tag {
   padding: 10px 12px;
 }
 
+.register-upload-field {
+  gap: 10px;
+  text-align: center;
+}
+
+.register-upload-field .field-label {
+  justify-self: center;
+  text-align: center;
+}
+
+.register-upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.register-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.register-upload-row .btn.register-upload-label,
+.register-upload-row .btn.register-upload-clear {
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.register-upload-label {
+  cursor: pointer;
+  text-align: center;
+  border-color: rgba(96, 165, 250, 0.35);
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.register-upload-label:hover {
+  border-color: rgba(96, 165, 250, 0.55);
+  background: rgba(96, 165, 250, 0.18);
+}
+
+body.light-mode .register-upload-label {
+  border-color: rgba(13, 148, 136, 0.32);
+  background: rgba(45, 212, 191, 0.1);
+}
+
+.register-upload-preview {
+  margin-top: 4px;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.15);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.register-upload-preview[data-empty="1"] {
+  justify-content: center;
+}
+
+body.light-mode .register-upload-preview {
+  border-color: rgba(120, 113, 108, 0.22);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.register-upload-placeholder {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+}
+
+.register-upload-preview-img {
+  max-width: 100%;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.request-cell-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.request-thumb-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.request-thumb-wrap--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--muted);
+  padding: 4px;
+}
+
+body.light-mode .request-thumb-wrap {
+  border-color: rgba(120, 113, 108, 0.18);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.request-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.request-cell-main {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
 .panel-actions {
   margin-top: 14px;
   display: grid;

@@ -157,6 +157,8 @@
   let currentUser = "anon";
   let requestSeq = 1;
   const pendingRequests = [];
+  /** Data URL JPEG reducido para demo (solicitud nueva desde el formulario). */
+  let workshopRegisterImageData = null;
 
   function resetCatalogEstados() {
     WS.forEach((w, i) => {
@@ -186,6 +188,117 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  function clearWorkshopRegisterImageField() {
+    workshopRegisterImageData = null;
+    const inp = document.getElementById("fImagenTaller");
+    const img = document.getElementById("fImagenTallerPreview");
+    const wrap = document.getElementById("fImagenTallerPreviewWrap");
+    const ph = document.getElementById("fImagenTallerPreviewPlaceholder");
+    const btnClear = document.getElementById("btnFImagenTallerClear");
+    if (inp) inp.value = "";
+    if (img) {
+      img.hidden = true;
+      img.removeAttribute("src");
+    }
+    if (wrap) wrap.setAttribute("data-empty", "1");
+    if (ph) ph.hidden = false;
+    if (btnClear) btnClear.hidden = true;
+  }
+
+  function workshopImageFileToDataUrl(file, maxSide, quality, done) {
+    if (!file || !/^image\//.test(file.type)) {
+      done(null);
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      done(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      if (typeof dataUrl !== "string") {
+        done(null);
+        return;
+      }
+      const im = new Image();
+      im.onload = () => {
+        let w = im.width;
+        let h = im.height;
+        const m = Math.max(w, h);
+        const cap = maxSide || 420;
+        if (m > cap) {
+          const s = cap / m;
+          w = Math.round(w * s);
+          h = Math.round(h * s);
+        }
+        const c = document.createElement("canvas");
+        c.width = w;
+        c.height = h;
+        const ctx = c.getContext("2d");
+        if (!ctx) {
+          done(dataUrl);
+          return;
+        }
+        ctx.drawImage(im, 0, 0, w, h);
+        try {
+          done(c.toDataURL("image/jpeg", quality || 0.82));
+        } catch (e) {
+          done(dataUrl);
+        }
+      };
+      im.onerror = function () {
+        done(null);
+      };
+      im.src = dataUrl;
+    };
+    reader.onerror = function () {
+      done(null);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function bindWorkshopRegisterImage() {
+    const inp = document.getElementById("fImagenTaller");
+    const btnClear = document.getElementById("btnFImagenTallerClear");
+    if (!inp || inp.dataset.bound === "1") return;
+    inp.dataset.bound = "1";
+    inp.addEventListener("change", function () {
+      const f = inp.files && inp.files[0];
+      if (!f) return;
+      workshopImageFileToDataUrl(f, 420, 0.82, function (dataUrl) {
+        if (!dataUrl) {
+          if (toast) {
+            toast.textContent =
+              "No se pudo usar la imagen (formato no admitido o archivo demasiado grande).";
+            toast.classList.add("is-visible");
+            window.setTimeout(function () {
+              toast.classList.remove("is-visible");
+            }, 2600);
+          }
+          inp.value = "";
+          return;
+        }
+        workshopRegisterImageData = dataUrl;
+        const img = document.getElementById("fImagenTallerPreview");
+        const wrap = document.getElementById("fImagenTallerPreviewWrap");
+        const ph = document.getElementById("fImagenTallerPreviewPlaceholder");
+        if (img) {
+          img.src = dataUrl;
+          img.hidden = false;
+        }
+        if (wrap) wrap.removeAttribute("data-empty");
+        if (ph) ph.hidden = true;
+        if (btnClear) btnClear.hidden = false;
+      });
+    });
+    if (btnClear) {
+      btnClear.addEventListener("click", function () {
+        clearWorkshopRegisterImageField();
+      });
+    }
   }
 
   function tallerTooltipHtml(t, variant) {
@@ -638,6 +751,7 @@
     setValue("fUbicacion", p.ubicacion);
     setValue("fDireccion", p.direccion);
     setValue("fHorarios", p.horarios);
+    clearWorkshopRegisterImageField();
   }
 
   function applyUser() {
@@ -669,14 +783,22 @@
           r.zona != null && r.zona !== ""
             ? " · " + escapeHtml(r.zona)
             : "";
+        const thumbBlock = r.imagenData
+          ? '<div class="request-thumb-wrap"><img class="request-thumb" src="' +
+            r.imagenData +
+            '" alt="" /></div>'
+          : '<div class="request-thumb-wrap request-thumb-wrap--empty">Sin foto</div>';
         return (
           '<div class="row">' +
-          '<div class="cell"><strong>' +
+          '<div class="cell">' +
+          '<div class="request-cell-inner">' +
+          thumbBlock +
+          '<div class="request-cell-main"><strong>' +
           escapeHtml(r.colaborador) +
           "</strong><br/><small>" +
           escapeHtml(r.rubro) +
           zonaBit +
-          "</small></div>" +
+          "</small></div></div></div>" +
           '<div class="cell">' +
           escapeHtml(r.taller) +
           "</div>" +
@@ -757,6 +879,7 @@
     workshopSearchQuery = "";
     const wsInput = document.getElementById("workshopSearch");
     if (wsInput) wsInput.value = "";
+    clearWorkshopRegisterImageField();
     resetCatalogEstados();
     seedCatalogPendingRequests();
     currentUser = "anon";
@@ -778,7 +901,9 @@
         rubro,
         zona: "",
         catalogIndex: null,
+        imagenData: workshopRegisterImageData,
       });
+      clearWorkshopRegisterImageField();
       renderPendingRequests();
       if (toast) {
         toast.textContent = `Solicitud enviada por ${colaborador}. Queda pendiente de aprobacion del administrador.`;
@@ -855,6 +980,7 @@
 
   bindWorkshopListInteraction();
   bindWorkshopSearch();
+  bindWorkshopRegisterImage();
   reset();
 })();
 

@@ -186,6 +186,22 @@
                     <span class="field-label">Horarios</span>
                     <input class="field-control" id="fHorarios" value="Lun a Vie 18:00 a 21:00" />
                   </label>
+                  <div class="field register-upload-field">
+                    <span class="field-label">Imagen del taller</span>
+                    <div class="register-upload-row">
+                      <input type="file" id="fImagenTaller" class="register-upload-input" accept="image/*" />
+                      <label for="fImagenTaller" class="btn register-upload-label">Elegir imagen</label>
+                      <button type="button" class="btn register-upload-clear" id="btnFImagenTallerClear" hidden>
+                        Quitar imagen
+                      </button>
+                    </div>
+                    <div class="register-upload-preview" id="fImagenTallerPreviewWrap" data-empty="1">
+                      <img id="fImagenTallerPreview" alt="" class="register-upload-preview-img" hidden />
+                      <span class="register-upload-placeholder" id="fImagenTallerPreviewPlaceholder">
+                        Ninguna imagen seleccionada.
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="panel-actions" style="margin-top:12px">
