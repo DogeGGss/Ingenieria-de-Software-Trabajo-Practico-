@@ -1,16 +1,5 @@
 (function () {
 
-  document.getElementById("fImagen").addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      let output = document.getElementById("previewImagen");
-      output.src = reader.result;
-      output.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  });
-
   const navLinks = Array.from(document.querySelectorAll(".nav-link"));
   const sections = Array.from(document.querySelectorAll(".content-section"));
 
@@ -167,6 +156,7 @@
   const workshopEstadoInicial = WS.map((w) => w.estado);
 
   let currentUser = "anon";
+  let isVisitorCreateMode = true;
   let requestSeq = 1;
   const pendingRequests = [];
   /** Data URL JPEG reducido para demo (solicitud nueva desde el formulario). */
@@ -667,6 +657,9 @@
   const collabPanel = document.getElementById("collabPanel");
   const adminRequestsList = document.getElementById("adminRequestsList");
   const btnEnviarSolicitud = document.getElementById("btnEnviarSolicitud");
+  const collabPanelIntro = document.getElementById("collabPanelIntro");
+  const collabEstadoActual = document.getElementById("collabEstadoActual");
+  const collabRevisionMsg = document.getElementById("collabRevisionMsg");
 
   const sessionToggle = document.getElementById("sessionToggle");
   const sessionMenu = document.getElementById("sessionMenu");
@@ -711,6 +704,7 @@
       ubicacion: "propia",
       direccion: "Av. Central 123",
       horarios: "Lun a Vie 18:00 a 21:00",
+      disponibilidadNotas: "Sin clases feriados. Consultar cupos por WhatsApp.",
     },
     lucia: {
       nombre: "Lucia Centro Cultural",
@@ -724,7 +718,26 @@
       ubicacion: "centro",
       direccion: "Sede Centro Cultural",
       horarios: "Mar y Jue 17:00 a 20:00",
+      disponibilidadNotas: "Disponible para grupos de hasta 20 personas.",
     },
+  };
+  const collaboratorWorkshopStatus = {
+    carlos: "Aprobado",
+    lucia: "Aprobado",
+  };
+  const visitorRegisterDefaults = {
+    nombre: "Nuevo colaborador",
+    telefono: "11-0000-0000",
+    correo: "nuevo@correo.com",
+    taller: "Mi nuevo taller",
+    descripcion: "Describe brevemente tu propuesta de taller.",
+    actividades: "Actividad 1, Actividad 2",
+    rubro: "General",
+    redes: "@mi_taller",
+    ubicacion: "propia",
+    direccion: "Direccion del taller",
+    horarios: "Dias y horarios a confirmar",
+    disponibilidadNotas: "Sin clases feriados. Cupos limitados.",
   };
 
   function applyTheme(mode) {
@@ -763,7 +776,144 @@
     setValue("fUbicacion", p.ubicacion);
     setValue("fDireccion", p.direccion);
     setValue("fHorarios", p.horarios);
+    setValue("fDisponibilidadNotas", p.disponibilidadNotas || "");
     clearWorkshopRegisterImageField();
+  }
+
+  function loadVisitorRegisterDefaults() {
+    const p = visitorRegisterDefaults;
+    setValue("fNombre", p.nombre);
+    setValue("fTelefono", p.telefono);
+    setValue("fCorreo", p.correo);
+    setValue("fTaller", p.taller);
+    setValue("fDescripcion", p.descripcion);
+    setValue("fActividades", p.actividades);
+    setValue("fRubro", p.rubro);
+    setValue("fRedes", p.redes);
+    setValue("fUbicacion", p.ubicacion);
+    setValue("fDireccion", p.direccion);
+    setValue("fHorarios", p.horarios);
+    setValue("fDisponibilidadNotas", p.disponibilidadNotas);
+    clearWorkshopRegisterImageField();
+  }
+
+  function getCollaboratorStatus(userKey) {
+    return collaboratorWorkshopStatus[userKey] || "Pendiente";
+  }
+
+  function saveCollaboratorProfile(userKey) {
+    const current = collaboratorProfiles[userKey] || {};
+    collaboratorProfiles[userKey] = {
+      ...current,
+      nombre: getValue("fNombre") || current.nombre || "Colaborador",
+      telefono: getValue("fTelefono"),
+      correo: getValue("fCorreo"),
+      taller: getValue("fTaller") || current.taller || "Taller sin nombre",
+      descripcion: getValue("fDescripcion"),
+      actividades: getValue("fActividades"),
+      rubro: getValue("fRubro") || "General",
+      redes: getValue("fRedes"),
+      ubicacion: getValue("fUbicacion") || "propia",
+      direccion: getValue("fDireccion"),
+      horarios: getValue("fHorarios"),
+      disponibilidadNotas: getValue("fDisponibilidadNotas"),
+    };
+  }
+
+  function renderCollaboratorPanelState() {
+    if (!btnEnviarSolicitud) return;
+    if (isVisitorCreateMode) {
+      btnEnviarSolicitud.textContent = "Crear usuario y enviar taller";
+      if (collabPanelIntro) {
+        collabPanelIntro.textContent =
+          "Completa tus datos para crear tu usuario colaborador y enviar el taller a revision.";
+      }
+      if (collabEstadoActual) collabEstadoActual.textContent = "Nuevo registro";
+      if (collabRevisionMsg) {
+        collabRevisionMsg.textContent =
+          "Al enviar, se crea tu usuario y la solicitud de alta del taller.";
+      }
+      return;
+    }
+    if (Boolean(collaboratorProfiles[currentUser])) {
+      btnEnviarSolicitud.textContent = "Guardar cambios";
+      if (collabPanelIntro) {
+        collabPanelIntro.textContent =
+          "Administra los datos del taller. Cada cambio se envia a revision del administrador.";
+      }
+      if (collabEstadoActual) collabEstadoActual.textContent = getCollaboratorStatus(currentUser);
+      if (collabRevisionMsg) {
+        collabRevisionMsg.textContent =
+          "Puedes actualizar datos y disponibilidad. El administrador revisa los cambios antes de publicarlos.";
+      }
+      return;
+    }
+    btnEnviarSolicitud.textContent = "Guardar cambios";
+    if (collabPanelIntro) {
+      collabPanelIntro.textContent =
+        "Administra la informacion del taller. Los cambios quedan sujetos a revision del administrador.";
+    }
+    if (collabEstadoActual) collabEstadoActual.textContent = "—";
+    if (collabRevisionMsg) collabRevisionMsg.textContent = "Sin datos del colaborador activo.";
+  }
+
+  function slugifyForUserKey(input) {
+    return String(input || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 24);
+  }
+
+  function ensureUniqueUserKey(base) {
+    let key = base || "colaborador";
+    let n = 2;
+    while (users[key] || collaboratorProfiles[key]) {
+      key = (base || "colaborador") + "-" + n;
+      n += 1;
+    }
+    return key;
+  }
+
+  function createCollaboratorUserFromForm() {
+    const nombre = getValue("fNombre") || "Colaborador";
+    const correo = getValue("fCorreo");
+    const telefono = getValue("fTelefono");
+    const taller = getValue("fTaller") || "Taller sin nombre";
+    const descripcion = getValue("fDescripcion");
+    const actividades = getValue("fActividades");
+    const rubro = getValue("fRubro") || "General";
+    const redes = getValue("fRedes");
+    const ubicacion = getValue("fUbicacion") || "propia";
+    const direccion = getValue("fDireccion");
+    const horarios = getValue("fHorarios");
+    const disponibilidadNotas = getValue("fDisponibilidadNotas");
+
+    const baseKey = slugifyForUserKey(correo || nombre || taller);
+    const userKey = ensureUniqueUserKey(baseKey || "colaborador");
+
+    users[userKey] = {
+      label: nombre + " (Colaborador)",
+      badge: "Colaborador",
+      status: "OK - taller propio",
+    };
+    collaboratorProfiles[userKey] = {
+      nombre,
+      telefono,
+      correo,
+      taller,
+      descripcion,
+      actividades,
+      rubro,
+      redes,
+      ubicacion,
+      direccion,
+      horarios,
+      disponibilidadNotas,
+    };
+    return { userKey, nombre };
   }
 
   function applyUser() {
@@ -772,10 +922,19 @@
     if (sessionBadge) sessionBadge.textContent = u.badge;
     if (sessionStatus) sessionStatus.textContent = u.status;
     const isAdmin = currentUser === "admin";
-    const isCollaborator = currentUser === "carlos" || currentUser === "lucia";
+    const isCollaborator =
+      currentUser === "carlos" ||
+      currentUser === "lucia" ||
+      isVisitorCreateMode ||
+      Boolean(collaboratorProfiles[currentUser]);
     if (adminPanel) adminPanel.classList.toggle("is-hidden", !isAdmin);
     if (collabPanel) collabPanel.classList.toggle("is-hidden", !isCollaborator);
-    if (isCollaborator) loadCollaboratorForm(currentUser);
+    if (isVisitorCreateMode) {
+      loadVisitorRegisterDefaults();
+    } else if (isCollaborator) {
+      loadCollaboratorForm(currentUser);
+    }
+    renderCollaboratorPanelState();
     renderWorkshopList();
     renderPendingRequests();
   }
@@ -810,6 +969,7 @@
           "</strong><br/><small>" +
           escapeHtml(r.rubro) +
           zonaBit +
+          (r.tipo ? " · " + escapeHtml(r.tipo) : "") +
           "</small></div></div></div>" +
           '<div class="cell">' +
           escapeHtml(r.taller) +
@@ -895,6 +1055,7 @@
     resetCatalogEstados();
     seedCatalogPendingRequests();
     currentUser = "anon";
+    isVisitorCreateMode = true;
     applyUser();
   }
 
@@ -902,6 +1063,21 @@
   if (btnReset) btnReset.addEventListener("click", reset);
   if (btnEnviarSolicitud) {
     btnEnviarSolicitud.addEventListener("click", () => {
+      let registeredNow = false;
+      let nuevoNombre = "";
+      let isUpdateFlow = false;
+      if (isVisitorCreateMode) {
+        const created = createCollaboratorUserFromForm();
+        currentUser = created.userKey;
+        nuevoNombre = created.nombre;
+        collaboratorWorkshopStatus[currentUser] = "Pendiente";
+        registeredNow = true;
+        isVisitorCreateMode = false;
+      } else if (collaboratorProfiles[currentUser]) {
+        saveCollaboratorProfile(currentUser);
+        collaboratorWorkshopStatus[currentUser] = "Pendiente";
+        isUpdateFlow = true;
+      }
       const profile = collaboratorProfiles[currentUser] || {};
       const colaborador = getValue("fNombre") || profile.nombre || "Colaborador";
       const taller = getValue("fTaller") || profile.taller || "Taller sin nombre";
@@ -914,14 +1090,23 @@
         zona: "",
         catalogIndex: null,
         imagenData: workshopRegisterImageData,
+        userKey: currentUser,
+        tipo: isUpdateFlow ? "Actualizacion" : "Alta",
       });
       clearWorkshopRegisterImageField();
       renderPendingRequests();
       if (toast) {
-        toast.textContent = `Solicitud enviada por ${colaborador}. Queda pendiente de aprobacion del administrador.`;
+        if (registeredNow) {
+          toast.textContent = `Usuario ${nuevoNombre} creado y solicitud enviada para ${taller}. Queda pendiente de aprobacion del administrador.`;
+        } else if (isUpdateFlow) {
+          toast.textContent = `Cambios guardados para ${taller}. Se envio una solicitud de revision al administrador.`;
+        } else {
+          toast.textContent = `Solicitud enviada por ${colaborador}. Queda pendiente de aprobacion del administrador.`;
+        }
         toast.classList.add("is-visible");
         window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
       }
+      applyUser();
     });
   }
 
@@ -941,6 +1126,9 @@
         req.catalogIndex < WS.length
       ) {
         WS[req.catalogIndex].estado = "Aprobado";
+      }
+      if (req.userKey) {
+        collaboratorWorkshopStatus[req.userKey] = approveBtn ? "Aprobado" : "Pendiente";
       }
       pendingRequests.splice(idx, 1);
       renderPendingRequests();
@@ -966,6 +1154,7 @@
       const user = btn.getAttribute("data-user");
       if (!user) return;
       currentUser = user;
+      isVisitorCreateMode = user === "anon";
       applyUser();
       sessionMenu.classList.remove("is-open");
     });

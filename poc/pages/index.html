@@ -121,11 +121,9 @@
             </div>
 
             <div class="card role-panel" id="collabPanel">
-              <div class="card-title">Regístrate en la comunidad de talleres</div>
-              <div class="card-text">
-                Únete a una red de talleres. Envie sus datos personales y los de su taller para su revision por parte
-                del
-                administrador.
+              <div class="card-title">Gestion de colaborador</div>
+              <div class="card-text" id="collabPanelIntro">
+                Administra la informacion del taller. Los cambios quedan sujetos a revision del administrador.
               </div>
               <hr class="hr-register">
               <div class="panel-data">
@@ -145,6 +143,16 @@
                     <span class="field-label">Correo</span>
                     <input class="field-control" id="fCorreo" value="carlos@correo.com" />
                   </label>
+                  <div style="height:250px;" aria-hidden="true"></div>
+                  <div class="data-text" style="margin-top:0;">
+                    Estado y revision
+                  </div>
+                  <div class="card-text">
+                    Estado actual del taller: <strong id="collabEstadoActual">Aprobado</strong>
+                  </div>
+                  <div class="card-text" id="collabRevisionMsg">
+                    Puedes guardar cambios para enviar una solicitud de revision.
+                  </div>
                 </div>
                 <div class="panel-group">
                   <div class="data-text">
@@ -186,7 +194,11 @@
                     <span class="field-label">Horarios</span>
                     <input class="field-control" id="fHorarios" value="Lun a Vie 18:00 a 21:00" />
                   </label>
-<<<<<<< HEAD
+                  <label class="field">
+                    <span class="field-label">Disponibilidad / observaciones</span>
+                    <input class="field-control" id="fDisponibilidadNotas"
+                      value="Sin clases feriados. Consultar cupos por WhatsApp." />
+                  </label>
                   <div class="field register-upload-field">
                     <span class="field-label">Imagen del taller</span>
                     <div class="register-upload-row">
@@ -203,22 +215,11 @@
                       </span>
                     </div>
                   </div>
-=======
-                  <label class="field">
-                    <span class="field-label">Cargar imagen del taller</span>
-                    <div class="field-control">
-                      <input type="file" id="fImagen" accept="image/*" />
-                      <br>
-                      <img src="#" alt="Imagen del taller" id="previewImagen" class="preview-image" />
-                    </div>
-
-                  </label>
->>>>>>> 4bb00280148359a461e0afce4b5c9c38c08d22cd
                 </div>
               </div>
               <div class="panel-actions" style="margin-top:12px">
                 <button class="btn btn-primary" type="button" id="btnEnviarSolicitud">
-                  Enviar para aprobacion
+                  Guardar cambios
                 </button>
               </div>
             </div>
