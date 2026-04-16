@@ -518,10 +518,12 @@ body.light-mode .theme-icon {
   transition:
     border-color 180ms ease,
     transform 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    min-height 220ms ease;
 }
 
 .workshop-item.is-selected {
+  --workshop-card-h: 376px;
   border-color: rgba(96, 165, 250, 0.6);
   background: rgba(15, 23, 42, 0.55);
   box-shadow:
@@ -796,6 +798,73 @@ body.light-mode .workshop-item:hover .workshop-item__body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.workshop-item__details {
+  margin: 0;
+  padding: 4px 18px 14px;
+  border-top: 1px solid rgba(15, 23, 42, 0.6);
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  overflow: hidden;
+  transition:
+    max-height 220ms ease,
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+body.light-mode .workshop-item__details {
+  border-top-color: rgba(214, 211, 209, 0.9);
+}
+
+.workshop-item.is-selected .workshop-item__details {
+  max-height: 320px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Vista previa del formulario: proporciones mas apaisadas */
+.workshop-item.workshop-item--preview {
+  --workshop-card-h: 220px;
+}
+
+.workshop-item.workshop-item--preview .workshop-item__details {
+  max-height: 220px;
+}
+
+.workshop-item.workshop-item--preview .workshop-item__visual {
+  min-height: var(--workshop-card-h);
+  height: var(--workshop-card-h);
+}
+
+.workshop-preview-shell {
+  display: flex;
+  justify-content: center;
+}
+
+.workshop-preview-shell .workshop-item.workshop-item--preview {
+  width: 100%;
+  max-width: 920px;
+}
+
+.workshop-detail-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+}
+
+.workshop-detail-label {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.workshop-detail-value {
+  text-align: right;
 }
 
 .tag {

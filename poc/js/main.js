@@ -448,6 +448,34 @@
         const subHtml = sub
           ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
           : "";
+        const encargado =
+          w.colaboradorNombre != null && String(w.colaboradorNombre).trim() !== ""
+            ? escapeHtml(w.colaboradorNombre)
+            : "A confirmar";
+        const telefono =
+          w.telefono != null && String(w.telefono).trim() !== ""
+            ? escapeHtml(w.telefono)
+            : "Sin telefono publicado";
+        const correo =
+          w.correo != null && String(w.correo).trim() !== ""
+            ? escapeHtml(w.correo)
+            : "Sin correo publicado";
+        const direccion =
+          w.direccion != null && String(w.direccion).trim() !== ""
+            ? escapeHtml(w.direccion)
+            : "A confirmar";
+        const horarios =
+          w.horarios != null && String(w.horarios).trim() !== ""
+            ? escapeHtml(w.horarios)
+            : "A confirmar";
+        const ubicacionLabel =
+          w.ubicacion === "centro"
+            ? "En centro cultural / espacio municipal"
+            : "Taller en espacio propio";
+        const redes =
+          w.redes != null && String(w.redes).trim() !== ""
+            ? escapeHtml(w.redes)
+            : "Sin redes publicadas";
         return (
           "<li class=\"workshop-item\" data-workshop-index=\"" +
           i +
@@ -470,6 +498,29 @@
           escapeHtml(w.zona) +
           "</span>" +
           estadoTag +
+          "</div>" +
+          '<div class="workshop-item__details" aria-hidden="true">' +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Encargado:</span><span class="workshop-detail-value">' +
+          encargado +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Telefono:</span><span class="workshop-detail-value">' +
+          telefono +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Correo:</span><span class="workshop-detail-value">' +
+          correo +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Ubicacion:</span><span class="workshop-detail-value">' +
+          escapeHtml(ubicacionLabel) +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Direccion:</span><span class="workshop-detail-value">' +
+          direccion +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Horarios:</span><span class="workshop-detail-value">' +
+          horarios +
+          "</span></div>" +
+          '<div class="workshop-detail-row"><span class="workshop-detail-label">Contacto / redes:</span><span class="workshop-detail-value">' +
+          redes +
+          "</span></div>" +
           "</div></div></li>"
         );
       })
@@ -655,8 +706,12 @@
   const inlineCategory = document.getElementById("inlineCategory");
   const adminPanel = document.getElementById("adminPanel");
   const collabPanel = document.getElementById("collabPanel");
+  const previewPanel = document.getElementById("previewPanel");
+  const workshopPreviewCard = document.getElementById("workshopPreviewCard");
   const adminRequestsList = document.getElementById("adminRequestsList");
   const btnEnviarSolicitud = document.getElementById("btnEnviarSolicitud");
+  const btnConfirmarEnvio = document.getElementById("btnConfirmarEnvio");
+  const btnSeguirEditando = document.getElementById("btnSeguirEditando");
   const collabPanelIntro = document.getElementById("collabPanelIntro");
   const collabEstadoActual = document.getElementById("collabEstadoActual");
   const collabRevisionMsg = document.getElementById("collabRevisionMsg");
@@ -929,6 +984,10 @@
       Boolean(collaboratorProfiles[currentUser]);
     if (adminPanel) adminPanel.classList.toggle("is-hidden", !isAdmin);
     if (collabPanel) collabPanel.classList.toggle("is-hidden", !isCollaborator);
+    if (previewPanel) {
+      const showPreview = isVisitorCreateMode && isCollaborator;
+      previewPanel.classList.toggle("is-hidden", !showPreview);
+    }
     if (isVisitorCreateMode) {
       loadVisitorRegisterDefaults();
     } else if (isCollaborator) {
@@ -937,6 +996,126 @@
     renderCollaboratorPanelState();
     renderWorkshopList();
     renderPendingRequests();
+  }
+
+  function collectWorkshopFromFormForPreview() {
+    const nombreColab = getValue("fNombre") || "Nuevo colaborador";
+    const telefono = getValue("fTelefono");
+    const correo = getValue("fCorreo");
+    const taller = getValue("fTaller") || "Mi nuevo taller";
+    const descripcion = getValue("fDescripcion");
+    const actividades = getValue("fActividades");
+    const rubro = getValue("fRubro") || "General";
+    const redes = getValue("fRedes");
+    const ubicacion = getValue("fUbicacion") || "propia";
+    const direccion = getValue("fDireccion");
+    const horarios = getValue("fHorarios");
+    return {
+      nombre: taller,
+      rubro,
+      zona: "",
+      estado: "Pendiente",
+      colaboradorNombre: nombreColab,
+      telefono,
+      correo,
+      descripcion,
+      actividades,
+      redes,
+      ubicacion,
+      direccion,
+      horarios,
+    };
+  }
+
+  function renderWorkshopPreviewCard() {
+    if (!workshopPreviewCard) return;
+    const w = collectWorkshopFromFormForPreview();
+    const hasCore =
+      (w.nombre && w.nombre.trim() !== "") ||
+      (w.descripcion && String(w.descripcion).trim() !== "") ||
+      (w.actividades && String(w.actividades).trim() !== "");
+    if (!hasCore) {
+      workshopPreviewCard.innerHTML =
+        '<div class="card-text">Completa al menos el nombre del taller y una breve descripcion para ver la vista previa.</div>';
+      return;
+    }
+    const imgSrc =
+      workshopRegisterImageData ||
+      "../../img-talleres/" + thumbFileForRubro(w.rubro);
+    const srcHtml = workshopRegisterImageData ? imgSrc : encodeURI(imgSrc);
+    const sub =
+      truncateText(w.descripcion, 110) || truncateText(w.actividades, 110);
+    const subHtml = sub
+      ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
+      : "";
+    const encargado =
+      w.colaboradorNombre != null && String(w.colaboradorNombre).trim() !== ""
+        ? escapeHtml(w.colaboradorNombre)
+        : "A confirmar";
+    const telefono =
+      w.telefono != null && String(w.telefono).trim() !== ""
+        ? escapeHtml(w.telefono)
+        : "Sin telefono publicado";
+    const correo =
+      w.correo != null && String(w.correo).trim() !== ""
+        ? escapeHtml(w.correo)
+        : "Sin correo publicado";
+    const direccion =
+      w.direccion != null && String(w.direccion).trim() !== ""
+        ? escapeHtml(w.direccion)
+        : "A confirmar";
+    const horarios =
+      w.horarios != null && String(w.horarios).trim() !== ""
+        ? escapeHtml(w.horarios)
+        : "A confirmar";
+    const ubicacionLabel =
+      w.ubicacion === "centro"
+        ? "En centro cultural / espacio municipal"
+        : "Taller en espacio propio";
+    const redes =
+      w.redes != null && String(w.redes).trim() !== ""
+        ? escapeHtml(w.redes)
+        : "Sin redes publicadas";
+    workshopPreviewCard.innerHTML =
+      '<div class="workshop-item is-selected workshop-item--preview">' +
+      '<div class="workshop-item__visual" aria-hidden="true">' +
+      '<img class="workshop-item__thumb" src="' +
+      srcHtml +
+      '" alt="" loading="lazy" decoding="async"/>' +
+      "</div>" +
+      '<div class="workshop-item__body">' +
+      '<div class="workshop-item__title">' +
+      escapeHtml(w.nombre) +
+      "</div>" +
+      subHtml +
+      '<div class="workshop-item__meta">' +
+      '<span class="tag tag-rubro">' +
+      escapeHtml(w.rubro) +
+      "</span>" +
+      "</div>" +
+      '<div class="workshop-item__details">' +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Encargado:</span><span class="workshop-detail-value">' +
+      encargado +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Telefono:</span><span class="workshop-detail-value">' +
+      telefono +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Correo:</span><span class="workshop-detail-value">' +
+      correo +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Ubicacion:</span><span class="workshop-detail-value">' +
+      escapeHtml(ubicacionLabel) +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Direccion:</span><span class="workshop-detail-value">' +
+      direccion +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Horarios:</span><span class="workshop-detail-value">' +
+      horarios +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Contacto / redes:</span><span class="workshop-detail-value">' +
+      redes +
+      "</span></div>" +
+      "</div></div></div>";
   }
 
   function renderPendingRequests() {
@@ -1061,52 +1240,83 @@
 
   if (btnSimular) btnSimular.addEventListener("click", simulate);
   if (btnReset) btnReset.addEventListener("click", reset);
+  function submitCollaboratorRequest() {
+    let registeredNow = false;
+    let nuevoNombre = "";
+    let isUpdateFlow = false;
+    if (isVisitorCreateMode) {
+      const created = createCollaboratorUserFromForm();
+      currentUser = created.userKey;
+      nuevoNombre = created.nombre;
+      collaboratorWorkshopStatus[currentUser] = "Pendiente";
+      registeredNow = true;
+      isVisitorCreateMode = false;
+    } else if (collaboratorProfiles[currentUser]) {
+      saveCollaboratorProfile(currentUser);
+      collaboratorWorkshopStatus[currentUser] = "Pendiente";
+      isUpdateFlow = true;
+    }
+    const profile = collaboratorProfiles[currentUser] || {};
+    const colaborador = getValue("fNombre") || profile.nombre || "Colaborador";
+    const taller = getValue("fTaller") || profile.taller || "Taller sin nombre";
+    const rubro = getValue("fRubro") || profile.rubro || "General";
+    pendingRequests.push({
+      id: requestSeq++,
+      colaborador,
+      taller,
+      rubro,
+      zona: "",
+      catalogIndex: null,
+      imagenData: workshopRegisterImageData,
+      userKey: currentUser,
+      tipo: isUpdateFlow ? "Actualizacion" : "Alta",
+    });
+    clearWorkshopRegisterImageField();
+    renderPendingRequests();
+    if (toast) {
+      if (registeredNow) {
+        toast.textContent = `Usuario ${nuevoNombre} creado y solicitud enviada para ${taller}. Queda pendiente de aprobacion del administrador.`;
+      } else if (isUpdateFlow) {
+        toast.textContent = `Cambios guardados para ${taller}. Se envio una solicitud de revision al administrador.`;
+      } else {
+        toast.textContent = `Solicitud enviada por ${colaborador}. Queda pendiente de aprobacion del administrador.`;
+      }
+      toast.classList.add("is-visible");
+      window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
+    }
+    applyUser();
+  }
+
   if (btnEnviarSolicitud) {
     btnEnviarSolicitud.addEventListener("click", () => {
-      let registeredNow = false;
-      let nuevoNombre = "";
-      let isUpdateFlow = false;
       if (isVisitorCreateMode) {
-        const created = createCollaboratorUserFromForm();
-        currentUser = created.userKey;
-        nuevoNombre = created.nombre;
-        collaboratorWorkshopStatus[currentUser] = "Pendiente";
-        registeredNow = true;
-        isVisitorCreateMode = false;
-      } else if (collaboratorProfiles[currentUser]) {
-        saveCollaboratorProfile(currentUser);
-        collaboratorWorkshopStatus[currentUser] = "Pendiente";
-        isUpdateFlow = true;
-      }
-      const profile = collaboratorProfiles[currentUser] || {};
-      const colaborador = getValue("fNombre") || profile.nombre || "Colaborador";
-      const taller = getValue("fTaller") || profile.taller || "Taller sin nombre";
-      const rubro = getValue("fRubro") || profile.rubro || "General";
-      pendingRequests.push({
-        id: requestSeq++,
-        colaborador,
-        taller,
-        rubro,
-        zona: "",
-        catalogIndex: null,
-        imagenData: workshopRegisterImageData,
-        userKey: currentUser,
-        tipo: isUpdateFlow ? "Actualizacion" : "Alta",
-      });
-      clearWorkshopRegisterImageField();
-      renderPendingRequests();
-      if (toast) {
-        if (registeredNow) {
-          toast.textContent = `Usuario ${nuevoNombre} creado y solicitud enviada para ${taller}. Queda pendiente de aprobacion del administrador.`;
-        } else if (isUpdateFlow) {
-          toast.textContent = `Cambios guardados para ${taller}. Se envio una solicitud de revision al administrador.`;
-        } else {
-          toast.textContent = `Solicitud enviada por ${colaborador}. Queda pendiente de aprobacion del administrador.`;
+        renderWorkshopPreviewCard();
+        if (previewPanel) {
+          previewPanel.classList.remove("is-hidden");
         }
-        toast.classList.add("is-visible");
-        window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
+        if (toast) {
+          toast.textContent =
+            "Revisa la vista previa de tu taller. Si estas de acuerdo, confirma el envio.";
+          toast.classList.add("is-visible");
+          window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
+        }
+        return;
       }
-      applyUser();
+      submitCollaboratorRequest();
+    });
+  }
+
+  if (btnConfirmarEnvio) {
+    btnConfirmarEnvio.addEventListener("click", () => {
+      if (!isVisitorCreateMode && !collaboratorProfiles[currentUser]) return;
+      submitCollaboratorRequest();
+      if (previewPanel) previewPanel.classList.add("is-hidden");
+    });
+  }
+
+  if (btnSeguirEditando) {
+    btnSeguirEditando.addEventListener("click", () => {
+      if (previewPanel) previewPanel.classList.add("is-hidden");
     });
   }
 
